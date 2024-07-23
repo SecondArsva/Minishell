@@ -18,6 +18,10 @@ void	print_data(t_data *data)
 	ft_print_matrix(data->env, "env");
 }
 
+/*
+ * TODO barras invertidas
+*/
+
 int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;

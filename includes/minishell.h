@@ -49,7 +49,8 @@ typedef struct s_token
 typedef struct	s_token
 {
 	t_type			type;
-	char			**value;
+	char			*value; // for debbuging
+	//char			**value;
 	struct s_token	*next;
 }				t_token;
 

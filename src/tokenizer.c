@@ -9,6 +9,26 @@
 	Devolverá una lista enlazada tal y como acordé con Axel.
 */
 
+/*
+void	into_quotes_print(t_data *data)
+{
+	//data->i = 0;
+	while (data->cmd_line[data->i])
+	{
+		if (data->cmd_line[data->i] == '\"' && !data->in_d_quot && !data->in_s_quot)
+			data->in_d_quot = true;
+		else if (data->cmd_line[data->i] == '\"' && data->in_d_quot)
+			data->in_d_quot = false;
+		else if (data->cmd_line[data->i] == '\'' && !data->in_s_quot && !data->in_d_quot)
+			data->in_s_quot = true;
+		else if (data->cmd_line[data->i] == '\'' && data->in_s_quot)
+			data->in_s_quot = false;
+		printf("%c - d: %i s: %i \n", data->cmd_line[data->i], data->in_d_quot, data->in_s_quot);
+		data->i++;
+	}
+}
+*/
+
 void	tok_print_list(t_token *head)
 {
 	t_token	*tmp_lst;
@@ -18,11 +38,23 @@ void	tok_print_list(t_token *head)
 	i = 0;
 	while (tmp_lst)
 	{
-		printf("node pos: %i", i);
+		printf("node_pos: %i", i);
 		printf("	type: %i", tmp_lst->type);
-		printf("		my address: %p", tmp_lst);
-		printf("	next: %p", tmp_lst->next);
-		// print value here at the end
+		if (tmp_lst->type == INFILE)
+			printf(" infile");
+		else if (tmp_lst->type == OUTFILE)
+			printf(" outfile");
+		else if (tmp_lst->type == APPEND)
+			printf(" append");
+		else if (tmp_lst->type == COMMAND)
+			printf(" command");
+		else if (tmp_lst->type == HEREDOC)
+			printf(" heredoc");
+		else if (tmp_lst->type == PIPE)
+			printf(" pipe");
+		printf("		my_address: %p", tmp_lst);
+		printf("	next: %p	", tmp_lst->next);
+		printf("	value: %s", tmp_lst->value);
 		printf("\n");
 		tmp_lst = tmp_lst->next;
 		i++;
@@ -61,9 +93,42 @@ void	tok_update_tail(t_token *head, t_token *new_tail)
 	tmp->next = new_tail;
 }
 
-char *tok_file_name(t_data *data)
+int	tok_into_quotes(t_data *data)
 {
-	
+	if (data->cmd_line[data->j] == '\"' && !data->in_d_quot && !data->in_s_quot)
+		data->in_d_quot = true;
+	else if (data->cmd_line[data->j] == '\"' && data->in_d_quot)
+		data->in_d_quot = false;
+	else if (data->cmd_line[data->j] == '\'' && !data->in_s_quot && !data->in_d_quot)
+		data->in_s_quot = true;
+	else if (data->cmd_line[data->j] == '\'' && data->in_s_quot)
+		data->in_s_quot = false;
+	if (data->in_d_quot == true || data->in_s_quot == true)
+		return (1);
+	else
+		return (0);
+}
+
+
+char *tok_value(t_data *data)
+{
+	char	*value;
+
+	while (data->cmd_line[data->i] == ' ')
+		data->i++;
+	data->j = data->i;
+	while (data->cmd_line[data->j])
+	{
+		if (tok_into_quotes(data))
+			data->j++;
+		else if (!tok_into_quotes(data) && ft_strchr(" <>|", data->cmd_line[data->j]))
+			break;
+		else if (!tok_into_quotes(data)) // TODO FALLA POR AQUÍ
+			data->j++;
+	}
+	value = ft_substr(data->cmd_line, data->i, (data->j) - data->i);
+	data->i = data->j;
+	return (value);
 }
 
 char *tok_grab_value(t_data *data, t_type opcode)
@@ -73,17 +138,16 @@ char *tok_grab_value(t_data *data, t_type opcode)
 	else if (opcode == INFILE || opcode == OUTFILE)
 		data->i++;
 	else if (opcode == HEREDOC || opcode == APPEND)
-		data->i + 2;
-
+		data->i = data->i + 2;
 	if (opcode == PIPE)
 		return (NULL);
 	else if (opcode == INFILE || opcode == OUTFILE || opcode == APPEND)
-		return (tok_file_name(data));
+		return (tok_value(data));
 	else if (opcode == HEREDOC)
-		return (tok_end_of_file(data));
-	else if (opcode == COMMAND);
-		return (tok_command(data));
-	return ("fool return")
+		return (tok_value(data));
+	else if (opcode == COMMAND)
+		return (tok_value(data));
+	return ("fool return");
 }
 
 void	tok_new_node(t_data *data, t_type opcode)
@@ -132,38 +196,20 @@ void	tokenizer(t_data *data)
 			data->i++;
 		else if (data->cmd_line[data->i] == '|')
 			tok_new_node(data, PIPE);
+		else if (data->cmd_line[data->i] == '<' && data->cmd_line[data->i+1] == '<')
+			tok_new_node(data, HEREDOC);
+		else if (data->cmd_line[data->i] == '>' && data->cmd_line[data->i+1] == '>')
+			tok_new_node(data, APPEND);
 		else if (data->cmd_line[data->i] == '<')
 			tok_new_node(data, INFILE);
 		else if (data->cmd_line[data->i] == '>')
 			tok_new_node(data, OUTFILE);
-		else if (data->cmd_line[data->i] == '<' && data->cmd_line[data->i++] == '<')
-			tok_new_node(data, HEREDOC);
-		else if (data->cmd_line[data->i] == '>' && data->cmd_line[data->i++] == '>')
-			tok_new_node(data, APPEND);
 		else
 			tok_new_node(data, COMMAND);
 	}
 }
 
-/*
-void	into_quotes(t_data *data)
-{
-	data->i = 0;
-	while (data->cmd_line[data->i])
-	{
-		if (data->cmd_line[data->i] == '\"' && !data->in_d_quot && !data->in_s_quot)
-			data->in_d_quot = true;
-		else if (data->cmd_line[data->i] == '\"' && data->in_d_quot)
-			data->in_d_quot = false;
-		else if (data->cmd_line[data->i] == '\'' && !data->in_s_quot && !data->in_d_quot)
-			data->in_s_quot = true;
-		else if (data->cmd_line[data->i] == '\'' && data->in_s_quot)
-			data->in_s_quot = false;
-		printf("%c - d: %i s: %i \n", data->cmd_line[data->i], data->in_d_quot, data->in_s_quot);
-		data->i++;
-	}
-}
-*/
+
 
 /*
 int main(int argc, char **argv, char **env)
