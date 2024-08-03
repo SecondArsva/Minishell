@@ -54,6 +54,8 @@ void	tok_print_list(t_token *head)
 			printf(" pipe");
 		printf("		my_address: %p", tmp_lst);
 		printf("	next: %p	", tmp_lst->next);
+		if (!tmp_lst->next)
+			printf("	");
 		printf("	value: %s", tmp_lst->value);
 		printf("\n");
 		tmp_lst = tmp_lst->next;
@@ -109,7 +111,6 @@ int	tok_into_quotes(t_data *data)
 		return (0);
 }
 
-
 char *tok_value(t_data *data)
 {
 	char	*value;
@@ -123,7 +124,7 @@ char *tok_value(t_data *data)
 			data->j++;
 		else if (!tok_into_quotes(data) && ft_strchr(" <>|", data->cmd_line[data->j]))
 			break;
-		else if (!tok_into_quotes(data)) // TODO FALLA POR AQUÍ
+		else if (!tok_into_quotes(data))
 			data->j++;
 	}
 	value = ft_substr(data->cmd_line, data->i, (data->j) - data->i);
@@ -131,6 +132,10 @@ char *tok_value(t_data *data)
 	return (value);
 }
 
+/*
+ * Avanza el iterador en caso de ser necesario según
+ * el tipo y recoge el valor correspondiente.
+*/
 char *tok_grab_value(t_data *data, t_type opcode)
 {
 	if (opcode == PIPE)
@@ -141,15 +146,12 @@ char *tok_grab_value(t_data *data, t_type opcode)
 		data->i = data->i + 2;
 	if (opcode == PIPE)
 		return (NULL);
-	else if (opcode == INFILE || opcode == OUTFILE || opcode == APPEND)
-		return (tok_value(data));
-	else if (opcode == HEREDOC)
-		return (tok_value(data));
-	else if (opcode == COMMAND)
+	else
 		return (tok_value(data));
 	return ("fool return");
 }
 
+// crea el nodo según el tipo
 void	tok_new_node(t_data *data, t_type opcode)
 {
 	t_token *new_node;
@@ -179,17 +181,10 @@ void	tok_new_node(t_data *data, t_type opcode)
 	// reorganize the CMD nodes //list_reorganize();
 	// expand the enviroment variables //list_expander();
 void	tokenizer(t_data *data)
-{	
+{
 	data->i = 0;
 	data->j = 0;
 
-	// for debug
-	//while (data->cmd_line[data->i])
-	//{
-	//	tok_new_node(data, INFILE);
-	//	data->i++;
-	//}
-	
 	while (data->cmd_line[data->i])
 	{
 		if (data->cmd_line[data->i] == ' ')
@@ -208,28 +203,3 @@ void	tokenizer(t_data *data)
 			tok_new_node(data, COMMAND);
 	}
 }
-
-
-
-/*
-int main(int argc, char **argv, char **env)
-{
-	t_data	*data;
-	char	*cmd_line = "<infile <   '\"$USER\"' 'cat' -e | \"cat\" >> \"'outfile'$USER\"";
-
-	if (argc != 1)
-	{
-		return (printf("only one argument\n"));
-		ft_print_matrix(argv, "argv");
-	}
-	ft_printf("Hola\n");
-	data = safe_malloc(sizeof(t_data));
-	init_data(data, cmd_line, env);
-	ft_printf("%s\n", data->cmd_line);
-	into_quotes(data);
-	//ft_print_matrix(data->env, "data->env");
-	printf("%s\n", argv[1]);
-	//tokenizer();
-	return (0);
-}
-*/

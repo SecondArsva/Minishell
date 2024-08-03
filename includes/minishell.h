@@ -67,8 +67,12 @@ typedef struct s_data
 	char	**env;
 	int		i;
 	int		j;
+	int		k;
+	int		l;
+	int		m;
 	bool	in_s_quot;
 	bool	in_d_quot;
+	bool	quoted;
 	t_token	*tokens;
 	t_fsm	*fsm;
 }				t_data;
@@ -81,5 +85,9 @@ char	**safe_matrixdup(char **original);
 //	### - TOKENIZER - ###
 void	tokenizer(t_data *data);
 void	tok_print_list(t_token *head);
+int		tok_into_quotes(t_data *data);
+
+//	### - EXPANDER - ###
+void	expander(t_data *data);
 
 #endif
