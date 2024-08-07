@@ -9,6 +9,7 @@ void	init_data(t_data *data, char **env)
 	data->k = 0;
 	data->l = 0;
 	data->m = 0;
+	data->exp_len = 0;
 	data->in_s_quot = 0;
 	data->in_d_quot = 0;
 	data->quoted = 0;
@@ -23,14 +24,6 @@ void	print_data(t_data *data)
 	printf("j: %i\n", data->j);
 	ft_print_matrix(data->env, "env");
 }
-
-/* TODO
- * getline loop
- * automata
- * count leng for the alloc in the expander
- * expander $
- * quote manage eraser
-*/
 
 int	main(int argc, char **argv, char **env)
 {

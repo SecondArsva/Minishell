@@ -1,17 +1,7 @@
 #include "../includes/minishell.h"
 
-/*
- * TODO
- * Hacer el Expander me está llevando más tiempo del que tenía pensado.
- * En primer lugar voy a tener que hacer un str_len del resultado final que tendrá
- * la línea finalmente expandida para hacer la reserva de memoria antes de expandir
- * el resultado.
- * A parte, necesito hacer lo mismo para trabajar con la posible variable encontrada
- * tras un dolar.
-*/
-
 // función para ver si el caracter es válido dentro del set de caracteres aceptados por una variable de entorno. Alfanuméricos (mayúsculas y minúsculas) y el guión bajo.
-int is_validvarchar(char c)
+int is_validenvchar(char c)
 {
 	if (c == '_' || (c >= 'a' && c <= 'z')
 	|| (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
@@ -50,7 +40,7 @@ void	grab_var_name(t_data *data, char *value, char *env)
 	i = 0;
 	while (value[data->i])
 	{
-		if (is_validvarchar(value[data->i]))
+		if (is_validenvchar(value[data->i]))
 		{
 			var_to_expand[i] = value[data->i];
 			data->i++;
@@ -84,16 +74,90 @@ void	format_type(t_data *data, char *value, char *exp_str)
 	}
 	else if ((value[data->i + 1] == '\"' || value[data->i + 1] == '\'') && !data->quoted)
 		data->i++;
-	else if (is_validvarchar(value[data->i + 1]))
+	else if (value[data->i + 1] == '$' && !data->in_s_quot)
+		data->i = data->i + 2;
+	//else if (is_validvarchar(value[data->i + 1]))
+	//{
+	//	grab_var_name(data, value, exp_str);
+	//}
+}
+
+void	env_len(t_data *data, char *val)
+{
+	int		finded_var_len;
+	char	*finded_var;
+	int		entry_value;
+
+	finded_var_len = 0;
+	finded_var = NULL;
+	data->i++;
+	entry_value = data->i;
+	while (val[data->i] && is_validenvchar(val[data->i]))
 	{
-		grab_var_name(data, value, exp_str);
+		data->i++;
+		finded_var_len++;
 	}
+	finded_var = safe_calloc(finded_var_len + 1, sizeof(char *));
+	data->i = entry_value;
+	// copy var name with a null
+	if (var_on_env(data, finded_var))
+		// aumento el expanded_len
+}
+
+
+/* Funci
+ * 
+ */
+void	format_len(t_data *data, char *val)
+{
+	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
+	|| (val[data->i + 1] == '"' && data->in_d_quot)
+	|| ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'') && !data->quoted))
+	{
+		data->i++;
+		data->exp_len++;
+	}
+	else if (val[data->i + 1] == '$' && !data->in_s_quot)
+		data->i = data->i + 2;
+	else if (is_validenvchar(val[data->i])) // look_enviroment
+		env_len(data, val);
+}
+
+/* Función que devuelve la longitud de un string tras expandirse
+ * para hacer una correcta reserva de memoria.
+
+ * En caso de no haber un dólar se suma en uno tanto al iterador que recorre
+ * el string como el entero a devolver. En caso de encontrar un dólar se
+ * valorará el caso a través de la función format_len de forma similar al
+ * especificador de formato en ft_printf.
+ */
+int	exp_len(t_data *data, char *val)
+{
+	data->i = 0;
+	data->exp_len = 0;
+
+	while (val[data->i])
+	{
+		exp_into_quotes(data, val);
+		if (val[data->i] == '$')
+			format_len(data, val);
+		else
+		{
+			data->i++;
+			data->exp_len++;
+		}
+	}
+	data->exp_len++; // para el null del final
+	printf("%i\n", data->exp_len);
+	return (data->exp_len);
 }
 
 void	manage_expansion(t_data *data, t_token *node)
 {
-	char	expanded_str[3000];
+	char	*exp_str;
 
+	exp_str = safe_calloc(exp_len(data, node->value), sizeof(char *));
+	/*
 	while (node->value[data->i])
 	{
 		printf("%c %i\n", node->value[data->i], data->i);
@@ -111,10 +175,8 @@ void	manage_expansion(t_data *data, t_token *node)
 	}
 	expanded_str[data->j] = '\0';
 	printf("expanded_string: %s\n", expanded_str);
+	*/
 }
-
-// necesito un strchr que verifique si encuentra un $ que no esté
-// entre comillas simples
 
 void	expander(t_data *data)
 {

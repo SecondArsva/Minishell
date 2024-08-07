@@ -61,6 +61,13 @@ typedef struct	s_fsm
 	// estado actual
 }				t_fsm;
 
+typedef struct	s_env
+{
+	char			*var_name;
+	char			*var_value;
+	struct s_env	*next;
+}				t_env;
+
 typedef struct s_data
 {
 	char	*cmd_line;
@@ -70,11 +77,13 @@ typedef struct s_data
 	int		k;
 	int		l;
 	int		m;
+	int		exp_len; // expanded_len for malloc
 	bool	in_s_quot;
 	bool	in_d_quot;
 	bool	quoted;
 	t_token	*tokens;
 	t_fsm	*fsm;
+	t_env	*env;
 }				t_data;
 
 //	### - SAFE ALLOC - ###
