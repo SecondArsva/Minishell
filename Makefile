@@ -10,7 +10,7 @@ LIBFT = $(LIBFT_DIR)libft.a
 SRC =	src/main.c			\
 		src/safe_alloc.c	\
 		src/tokenizer.c		\
-		src/expander.c		\
+		src/init_env.c		\
 		
 OBJS = $(SRC:%.c=%.o)
 

@@ -13,7 +13,7 @@ void	init_data(t_data *data, char **env)
 	data->in_s_quot = 0;
 	data->in_d_quot = 0;
 	data->quoted = 0;
-	data->env = safe_matrixdup(env);
+	init_env(data, env);
 }
 
 void	print_data(t_data *data)
@@ -22,7 +22,18 @@ void	print_data(t_data *data)
 	printf("fsm: %p\n", data->fsm);
 	printf("i: %i\n", data->i);
 	printf("j: %i\n", data->j);
-	ft_print_matrix(data->env, "env");
+}
+
+void	env_print_list(t_env *head)
+{
+	t_env	*tmp;
+
+	tmp = head;
+	while (tmp)
+	{
+		printf("%s=\"%s\"\n", tmp->var_name, tmp->var_value);
+		tmp = tmp->next;
+	}
 }
 
 int	main(int argc, char **argv, char **env)
@@ -39,6 +50,7 @@ int	main(int argc, char **argv, char **env)
 	data->cmd_line = ft_strdup(cmd_line);
 	tokenizer(data);
 	tok_print_list(data->tokens);
-	expander(data);
+	env_print_list(data->env);
+	//expander(data);
 	return (0);
 }

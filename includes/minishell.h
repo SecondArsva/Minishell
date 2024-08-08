@@ -71,7 +71,6 @@ typedef struct	s_env
 typedef struct s_data
 {
 	char	*cmd_line;
-	char	**env;
 	int		i;
 	int		j;
 	int		k;
@@ -91,12 +90,15 @@ void	*safe_malloc(size_t bytes);
 void	*safe_calloc(size_t count, size_t size);
 char	**safe_matrixdup(char **original);
 
+//	### - INIT ENV - ###
+void	init_env(t_data *data, char **env);
+
 //	### - TOKENIZER - ###
 void	tokenizer(t_data *data);
 void	tok_print_list(t_token *head);
 int		tok_into_quotes(t_data *data);
 
 //	### - EXPANDER - ###
-void	expander(t_data *data);
+//void	expander(t_data *data);
 
 #endif
