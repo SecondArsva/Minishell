@@ -1,5 +1,16 @@
 #include "../includes/minishell.h"
 
+void	init_exec(t_data *data)
+{
+	data->exec = (t_exec *) safe_malloc(sizeof(t_exec));
+	data->exec->n_infiles = 0;
+	data->exec->n_outfiles = 0;
+	data->exec->n_appends = 0;
+	data->exec->n_commands = 0;
+	data->exec->n_heredocs = 0;
+	data->exec->n_pipes = 0;
+}
+
 void	init_data(t_data *data, char **env)
 {
 	data->tokens = NULL;
@@ -14,6 +25,7 @@ void	init_data(t_data *data, char **env)
 	data->in_d_quot = 0;
 	data->quoted = 0;
 	init_env(data, env);
+	init_exec(data);
 }
 
 void	print_data(t_data *data)
@@ -22,6 +34,17 @@ void	print_data(t_data *data)
 	printf("fsm: %p\n", data->fsm);
 	printf("i: %i\n", data->i);
 	printf("j: %i\n", data->j);
+}
+
+void	tok_print_total_node_types(t_exec *exec)
+{
+	printf("\n- Node Type Counter -\n");
+	printf("	INF: %i", exec->n_infiles);
+	printf("	OUT: %i", exec->n_outfiles);
+	printf("	APP: %i", exec->n_appends);
+	printf("	COM: %i", exec->n_commands);
+	printf("	HER: %i", exec->n_heredocs);
+	printf("	PIP: %i\n\n", exec->n_pipes);
 }
 
 void	env_print_list(t_env *head)
@@ -50,6 +73,7 @@ int	main(int argc, char **argv, char **env)
 	data->cmd_line = ft_strdup(cmd_line);
 	tokenizer(data);
 	tok_print_list(data->tokens);
+	tok_print_total_node_types(data->exec);
 	env_print_list(data->env);
 	//expander(data);
 	return (0);

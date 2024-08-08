@@ -151,6 +151,24 @@ char *tok_grab_value(t_data *data, t_type opcode)
 	return ("fool return");
 }
 
+// Incrementa el total de nodos según su tipo y así saber cuantos hay.
+// Un contador, vamos...
+void	tok_increase_node_type(t_data *data, t_type opcode)
+{
+	if (opcode == INFILE)
+		data->exec->n_infiles++;
+	else if (opcode == OUTFILE)
+		data->exec->n_outfiles++;
+	else if (opcode == APPEND)
+		data->exec->n_appends++;
+	else if (opcode == COMMAND)
+		data->exec->n_commands++;
+	else if (opcode == HEREDOC)
+		data->exec->n_heredocs++;
+	else if (opcode == PIPE)
+		data->exec->n_pipes++;
+}
+
 // crea el nodo según el tipo
 void	tok_new_node(t_data *data, t_type opcode)
 {
@@ -165,6 +183,7 @@ void	tok_new_node(t_data *data, t_type opcode)
 		data->tokens = new_node;
 	else
 		tok_update_tail(data->tokens, new_node);
+	tok_increase_node_type(data, opcode);
 }
 
 // <

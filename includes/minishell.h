@@ -68,6 +68,16 @@ typedef struct	s_env
 	struct s_env	*next;
 }				t_env;
 
+typedef struct	s_exec
+{
+	int n_infiles;
+	int n_outfiles;
+	int n_appends;
+	int n_commands;
+	int n_heredocs;
+	int n_pipes;
+}				t_exec;
+
 typedef struct s_data
 {
 	char	*cmd_line;
@@ -83,6 +93,7 @@ typedef struct s_data
 	t_token	*tokens;
 	t_fsm	*fsm;
 	t_env	*env;
+	t_exec	*exec;
 }				t_data;
 
 //	### - SAFE ALLOC - ###
