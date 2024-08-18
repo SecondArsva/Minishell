@@ -56,6 +56,12 @@ void	exp_exit_status_len(t_data *data)
  * 		'token$"'
  * 		"token$'"
  * 
+ *  - Si el dólar no está entrecomillado y le sigue una comilla simple o doble,
+ *    el dólar desaparece:
+ * 		$""
+ *      token$"USER"
+ *      token$'USER'
+ * 
  *  - Si encuentro dos dólares seguidos y siempre que no estén entre comillas
  *    simples se aumenta en +2 ya que ambos dólares de deben omitir al no
  *    poder acceder al PID:
@@ -71,8 +77,7 @@ void	exp_exit_status_len(t_data *data)
  *    que encuentre como supuesto nombre de variable a expandir, por lo que
  *    se aumentará el iterador o no según lo que se encuentre.
  * 
- *  - Me falta añadir el caso de la expansión al "Exit Status",
- *    el dólar interrogación, vamos... "$?"
+ *  - $? se expande al "Exit Status".
  * 
  *  - ¿Debería contar todo lo demás como un +1 y printeo del dólar? Si.
  *    echo $- = himBHs
@@ -81,12 +86,13 @@ void	exp_exit_status_len(t_data *data)
 void	format_len(t_data *data, char *val)
 {
 	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
-	|| (val[data->i + 1] == '"' && data->in_d_quot)
-	|| ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'') && !data->quoted))
+	|| (val[data->i + 1] == '"' && data->in_d_quot))
 	{
 		data->i++;
 		data->exp_len++;
 	}
+	else if ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'') && !data->quoted)
+		data->i++;
 	else if (val[data->i + 1] == '$' && !data->in_s_quot)
 		data->i += 2;
 	else if (is_validenvchar(val[data->i + 1]))
