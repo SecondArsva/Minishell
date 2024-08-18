@@ -12,7 +12,8 @@ SRC =	src/main.c			\
 		src/tokenizer.c		\
 		src/init_env.c		\
 		src/expander.c		\
-		
+		src/expanded_len.c	\
+
 OBJS = $(SRC:%.c=%.o)
 
 all: $(NAME)

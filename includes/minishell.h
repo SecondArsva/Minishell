@@ -112,5 +112,10 @@ int		tok_into_quotes(t_data *data);
 
 //	### - EXPANDER - ###
 void	expander(t_data *data);
+void	exp_into_quotes(t_data *data, char *value);
+int		is_validenvchar(char c);
+
+// ### - ENPANDED TOKEN LENGTH - ###
+int		exp_token_len(t_data *data, char *val);
 
 #endif
