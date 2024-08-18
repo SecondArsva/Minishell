@@ -90,6 +90,7 @@ typedef struct s_data
 	bool	in_s_quot;
 	bool	in_d_quot;
 	bool	quoted;
+	int		exit_status;
 	t_token	*tokens;
 	t_fsm	*fsm;
 	t_env	*env;
@@ -110,6 +111,6 @@ void	tok_print_list(t_token *head);
 int		tok_into_quotes(t_data *data);
 
 //	### - EXPANDER - ###
-//void	expander(t_data *data);
+void	expander(t_data *data);
 
 #endif

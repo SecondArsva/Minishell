@@ -42,6 +42,11 @@ char *env_grab_name(t_data *data, char **env)
 	return (name);
 }
 
+// En un futuro puedo añadir otros dos parámetros char * a la función con los
+// que poder añadir directamente el nombre de la variable y su valor cuando
+// se vaya a hacer un export.
+// void	env_new_node(t_data *data, char **env, char *name, char *value)
+// y en caso de que sea null, que se pille del env tal y como está.
 void	env_new_node(t_data *data, char **env)
 {
 	t_env	*new_node;

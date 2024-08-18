@@ -24,6 +24,7 @@ void	init_data(t_data *data, char **env)
 	data->in_s_quot = 0;
 	data->in_d_quot = 0;
 	data->quoted = 0;
+	data->exit_status = 0;
 	init_env(data, env);
 	init_exec(data);
 }
@@ -75,6 +76,6 @@ int	main(int argc, char **argv, char **env)
 	tok_print_list(data->tokens);
 	tok_print_total_node_types(data->exec);
 	env_print_list(data->env);
-	//expander(data);
+	expander(data);
 	return (0);
 }

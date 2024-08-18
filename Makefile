@@ -11,6 +11,7 @@ SRC =	src/main.c			\
 		src/safe_alloc.c	\
 		src/tokenizer.c		\
 		src/init_env.c		\
+		src/expander.c		\
 		
 OBJS = $(SRC:%.c=%.o)
 
