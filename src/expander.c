@@ -1,6 +1,10 @@
 #include "../includes/minishell.h"
 
-// función para ver si el caracter es válido dentro del set de caracteres aceptados por una variable de entorno. Alfanuméricos (mayúsculas y minúsculas) y el guión bajo.
+/*
+ * Función para ver si el carácter es válido dentro del set de carácteres
+ * aceptados por una variable de entorno.
+ * Alfanuméricos (mayúsculas y minúsculas) y el guión bajo.
+*/
 int is_validenvchar(char c)
 {
 	if (c == '_' || (c >= 'a' && c <= 'z')
@@ -31,27 +35,6 @@ void	exp_into_quotes(t_data *data, char *value)
 * hasta encontrarme con uno no válido dentro del nombre de las variables
 * de entorno, lo almacenaré y lo buscaré en el enviroment para expandir a
 * valor en caso de existir o expandirlo a nada en caso de que no exista.
-void	grab_var_name(t_data *data, char *value, char *env)
-{
-	char	var_to_expand[100];
-	int		i;
-
-	i = 0;
-	while (value[data->i])
-	{
-		if (is_validenvchar(value[data->i]))
-		{
-			var_to_expand[i] = value[data->i];
-			data->i++;
-			i++;
-		}
-		else
-		{
-			var_to_expand[i];
-			break ;
-		}
-	}
-}
 */
 
 /*
@@ -63,28 +46,9 @@ void	grab_var_name(t_data *data, char *value, char *env)
 * $VAR Valid Variable
 * $"" en este caso el dolar ha de desaparecer
 * $NO_EXIST_VAR Invalid Variable expand to nothing
-void	format_type(t_data *data, char *value, char *exp_str)
-{
-	if (!value[data->i + 1] || value[data->i + 1] == ' ' || data->in_s_quot || (value[data->i + 1] == '"' && data->in_d_quot)) 
-	{
-		exp_str[data->j] = '$';
-		data->i++;
-		data->j++;
-	}
-	else if ((value[data->i + 1] == '\"' || value[data->i + 1] == '\'') && !data->quoted)
-		data->i++;
-	else if (value[data->i + 1] == '$' && !data->in_s_quot)
-		data->i = data->i + 2;
-	//else if (is_validvarchar(value[data->i + 1]))
-	//{
-	//	grab_var_name(data, value, exp_str);
-	//}
-}
 */ 
 
-/*
- * Copia el carácter actual en el que se encuentra el iterador de value.
- */
+/* Copia el carácter actual en el que se encuentra el iterador de value. */
 void	exp_cpy_char(t_data *data, char *val)
 {
 	data->exp_str[data->j] = val[data->i];
@@ -101,7 +65,7 @@ void	env_check_var_exp(t_data *data, char *finded_var)
 	i = 0;
 	while (env)
 	{
-		if (!ft_strncmp(finded_var, env->var_name, ft_strlen(finded_var)))
+		if (!ft_strncmp(finded_var, env->var_name, ft_strlen(env->var_name) + 1))
 		{
 			while (env->var_value[i])
 			{
@@ -151,17 +115,17 @@ void	format_exp(t_data *data, char *val)
 {
 	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
 	|| (val[data->i + 1] == '"' && data->in_d_quot))
-		exp_cpy_char(data, val);	// OK
+		exp_cpy_char(data, val);
 	else if ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'') && !data->quoted)
-		data->i++;					// OK
+		data->i++;
 	else if (val[data->i + 1] == '$' && !data->in_s_quot)
-		data->i += 2;				// OK
+		data->i += 2;
 	else if (is_validenvchar(val[data->i + 1]))
-		env_exp(data, val);			// OK?
+		env_exp(data, val);
 	else if (val[data->i + 1] == '?')
 		exp_exit_status(data);
 	else
-		exp_cpy_char(data, val);	// OK
+		exp_cpy_char(data, val);
 }
 
 void	exp_val(t_data *data, char *val)
@@ -180,43 +144,24 @@ void	exp_val(t_data *data, char *val)
 	data->exp_str[data->j] = '\0';
 }
 
+// fill exp_str with the new value expanded
+// free node->value
+// upload node->value content to exp_str
+// free data->exp_str
 void	manage_expansion(t_data *data, t_token *node)
 {
 	data->exp_str = NULL;
 	data->exp_str = safe_calloc(exp_token_len(data, node->value), sizeof(char *));
-	// fill exp_str with the new value expanded
 	exp_val(data, node->value);
-	// free node->value
 	free(node->value);
-	// upload node->value content to exp_str
 	node->value = ft_strdup(data->exp_str);
-	// free data->exp_str
 	free(data->exp_str);
-	/*
-	while (node->value[data->i])
-	{
-		printf("%c %i\n", node->value[data->i], data->i);
-		exp_into_quotes(data, node->value);
-		if (node->value[data->i] == '$')
-			format_type(data, node->value, expanded_str);
-		else
-		{
-			expanded_str[data->j] = node->value[data->i];
-			data->i++;
-			data->j++;
-		}
-		if (!node->value[data->i])
-			break ;
-	}
-	expanded_str[data->j] = '\0';
-	printf("expanded_string: %s\n", expanded_str);
-	*/
 }
 
 /*
-	Revisa la lista de los tokens y procesa el valor de
-	los nodos en caso de encontrar un dólar.
-*/
+ * Revisa la lista de los tokens y procesa el valor de
+ * los nodos en caso de encontrar un dólar.
+ */
 void	expander(t_data *data)
 {
 	t_token *tmp_lst;

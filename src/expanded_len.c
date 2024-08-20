@@ -7,7 +7,7 @@ void	env_check_var_len(t_data *data, char *finded_var)
 	env = data->env;
 	while (env)
 	{
-		if (!ft_strncmp(finded_var, env->var_name, ft_strlen(finded_var)))
+		if (!ft_strncmp(finded_var, env->var_name, ft_strlen(env->var_name) + 1))
 		{
 			data->exp_len += ft_strlen(env->var_value);
 			return ;
