@@ -130,6 +130,23 @@ void	env_exp(t_data *data, char *val)
 	free(finded_var);
 }
 
+void	exp_exit_status(t_data *data)
+{
+	char	*aux_str;
+	int		i;
+
+	i = 0;
+	aux_str = ft_itoa(data->exit_status);
+	data->i += 2;
+	while (aux_str[i])
+	{
+		data->exp_str[data->j] = aux_str[i];
+		data->j++;
+		i++;
+	}
+	free(aux_str);
+}
+
 void	format_exp(t_data *data, char *val)
 {
 	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
@@ -141,8 +158,8 @@ void	format_exp(t_data *data, char *val)
 		data->i += 2;				// OK
 	else if (is_validenvchar(val[data->i + 1]))
 		env_exp(data, val);			// OK?
-	//else if (val[data->i + 1] == '?')
-	//	exp_exit_status_len(data);
+	else if (val[data->i + 1] == '?')
+		exp_exit_status(data);
 	else
 		exp_cpy_char(data, val);	// OK
 }
