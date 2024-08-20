@@ -21,6 +21,7 @@ void	init_data(t_data *data, char **env)
 	data->l = 0;
 	data->m = 0;
 	data->exp_len = 0;
+	data->exp_str = NULL;
 	data->in_s_quot = 0;
 	data->in_d_quot = 0;
 	data->quoted = 0;
@@ -75,7 +76,8 @@ int	main(int argc, char **argv, char **env)
 	tokenizer(data);
 	tok_print_list(data->tokens);
 	tok_print_total_node_types(data->exec);
-	env_print_list(data->env);
+	//env_print_list(data->env);
 	expander(data);
+	tok_print_list(data->tokens);
 	return (0);
 }

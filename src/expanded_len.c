@@ -28,6 +28,7 @@ void	env_len(t_data *data, char *val)
 		data->i++;
 	finded_var = ft_substr(val, entry_value, (data->i - entry_value));
 	env_check_var_len(data, finded_var);
+	free(finded_var);
 }
 
 void	exp_exit_status_len(t_data *data)

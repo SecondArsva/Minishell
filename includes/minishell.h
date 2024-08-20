@@ -86,7 +86,8 @@ typedef struct s_data
 	int		k;
 	int		l;
 	int		m;
-	int		exp_len; // expanded_len for malloc
+	int		exp_len;
+	char	*exp_str;
 	bool	in_s_quot;
 	bool	in_d_quot;
 	bool	quoted;
