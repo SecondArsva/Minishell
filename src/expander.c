@@ -138,7 +138,7 @@ void	exp_val(t_data *data, char *val)
 		exp_into_quotes(data, val);
 		if (val[data->i] == '$')
 			format_exp(data, val);
-		else // copy char
+		else
 			exp_cpy_char(data, val);
 	}
 	data->exp_str[data->j] = '\0';

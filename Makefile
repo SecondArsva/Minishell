@@ -13,6 +13,7 @@ SRC =	src/main.c			\
 		src/init_env.c		\
 		src/expander.c		\
 		src/expanded_len.c	\
+		src/quoter.c		\
 
 OBJS = $(SRC:%.c=%.o)
 

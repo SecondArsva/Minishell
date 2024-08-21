@@ -75,9 +75,11 @@ int	main(int argc, char **argv, char **env)
 	data->cmd_line = ft_strdup(cmd_line);
 	tokenizer(data);
 	tok_print_list(data->tokens);
-	tok_print_total_node_types(data->exec);
+	//tok_print_total_node_types(data->exec);
 	//env_print_list(data->env);
 	expander(data);
+	tok_print_list(data->tokens);
+	quoter(data);
 	tok_print_list(data->tokens);
 	return (0);
 }

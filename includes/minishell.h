@@ -91,7 +91,7 @@ typedef struct s_data
 	bool	in_s_quot;
 	bool	in_d_quot;
 	bool	quoted;
-	int		exit_status;
+	int		exit_status; //need to be static
 	t_token	*tokens;
 	t_fsm	*fsm;
 	t_env	*env;
@@ -115,8 +115,12 @@ int		tok_into_quotes(t_data *data);
 void	expander(t_data *data);
 void	exp_into_quotes(t_data *data, char *value);
 int		is_validenvchar(char c);
+void	exp_cpy_char(t_data *data, char *val);
 
-// ### - ENPANDED TOKEN LENGTH - ###
+//	### - EXPANDER TOKEN LENGTH - ###
 int		exp_token_len(t_data *data, char *val);
+
+//	### - QUOTER - ###
+void	quoter(t_data *data);
 
 #endif
