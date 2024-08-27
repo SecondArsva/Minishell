@@ -56,9 +56,14 @@ typedef struct	s_token
 
 typedef struct	s_fsm
 {
-	// alfabeto
-	// estado previo
-	// estado actual
+	char	**alphabet;	// alfabeto
+	char	**errors;	// matriz de errores
+	char	*cmd_line;
+	int		cur_state;	// estado actual
+	int		old_state;	// estado previo
+	int		i;
+	int		j;
+	int		(*get_state)(int state, int abc_idx);
 }				t_fsm;
 
 typedef struct	s_env
@@ -83,9 +88,6 @@ typedef struct s_data
 	char	*cmd_line;
 	int		i;
 	int		j;
-	int		k;
-	int		l;
-	int		m;
 	int		exp_len;
 	char	*exp_str;
 	bool	in_s_quot;
@@ -93,9 +95,9 @@ typedef struct s_data
 	bool	quoted;
 	int		exit_status; //need to be static
 	t_token	*tokens;
-	t_fsm	*fsm;
 	t_env	*env;
 	t_exec	*exec;
+	t_fsm	*fsm;
 }				t_data;
 
 //	### - SAFE ALLOC - ###
@@ -122,5 +124,9 @@ int		exp_token_len(t_data *data, char *val);
 
 //	### - QUOTER - ###
 void	quoter(t_data *data);
+
+//	### - AUTOMATA - ###
+int	automata(t_data *data);
+int	get_state(int i, int j);
 
 #endif

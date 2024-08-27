@@ -17,9 +17,6 @@ void	init_data(t_data *data, char **env)
 	data->fsm = NULL;
 	data->i = 0;
 	data->j = 0;
-	data->k = 0;
-	data->l = 0;
-	data->m = 0;
 	data->exp_len = 0;
 	data->exp_str = NULL;
 	data->in_s_quot = 0;
@@ -28,6 +25,7 @@ void	init_data(t_data *data, char **env)
 	data->exit_status = 0;
 	init_env(data, env);
 	init_exec(data);
+	data->fsm = NULL;
 }
 
 void	print_data(t_data *data)
@@ -73,6 +71,7 @@ int	main(int argc, char **argv, char **env)
 	cmd_line = readline("Minishell$ ");
 	printf("cmd_line: %s\n", cmd_line);
 	data->cmd_line = ft_strdup(cmd_line);
+	automata(data);
 	tokenizer(data);
 	tok_print_list(data->tokens);
 	//tok_print_total_node_types(data->exec);
