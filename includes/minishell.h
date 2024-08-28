@@ -56,7 +56,7 @@ typedef struct	s_token
 
 typedef struct	s_fsm
 {
-	char	**alphabet;	// alfabeto
+	char	*alphabet;	// alfabeto
 	char	**errors;	// matriz de errores
 	char	*cmd_line;
 	int		cur_state;	// estado actual

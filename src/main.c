@@ -72,13 +72,13 @@ int	main(int argc, char **argv, char **env)
 	printf("cmd_line: %s\n", cmd_line);
 	data->cmd_line = ft_strdup(cmd_line);
 	automata(data);
-	tokenizer(data);
-	tok_print_list(data->tokens);
+//	tokenizer(data);
+//	tok_print_list(data->tokens);
 	//tok_print_total_node_types(data->exec);
 	//env_print_list(data->env);
-	expander(data);
-	tok_print_list(data->tokens);
-	quoter(data);
-	tok_print_list(data->tokens);
+//	expander(data);
+//	tok_print_list(data->tokens);
+//	quoter(data);
+//	tok_print_list(data->tokens);
 	return (0);
 }

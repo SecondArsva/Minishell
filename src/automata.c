@@ -9,15 +9,15 @@
  * 
  * Estados:
  *	- Empty line (Estado inicial) (Válido)
- *	- Open double quotes (Inválido)
  *	- Open single quotes (Inválido)
+ *	- Open double quotes (Inválido)
  *	- Open Pipe (Invalido)
  *	- Open infile (Inválido)
  *	- Open outfile (Inválido)
  *	- Open heredoc (Inválido)
  *	- Open append (Inválido)
+ *	- Spaces without words (¿Inválido? Si) Refiere a los espacios tras un operador
  *	- Reading text, not operator (Válido)
- *	- Spaces without words (¿Inválido?)
  *	- Spaces betwen words (Válido)
  *	- Invalid input (Inválido)
  *
@@ -91,20 +91,21 @@ int	get_idx(char *alphabet, char anal)
 int	get_state(int i, int j)
 {
 	const int	states[][9] = {
-//	 \s, ", ', |, <, >, i, c
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  0 - Empty line (Estado inicial) (Válido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  1 - Open double quotes (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  2 - Open single quotes (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  3 - Open Pipe (Invalido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  4 - Open infile (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  5 - Open outfile (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  6 - Open heredoc (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  7 - Open append (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  8 - Reading text, not operator (Válido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, //  9 - Spaces without words (¿Inválido?)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, // 10 - Spaces betwen words (Válido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, // 11 - Invalid input (Inválido)
-	{ 0, 0, 0, 0, 0, 0, 0, 0}, // 12 - No manage characters (Inválido)
+//	 \s, ', ", |, <, >, invalid, anychar
+//
+	{ 0, 1, 2, 10, 4, 5, 11, 12},		//  0 - Empty line (Estado inicial) (Válido)	[X]
+	{ 1, 9, 1, 1, 1, 1, 11, 1},			//  1 - Open Single quotes (Inválido)
+	{ 2, 2, 9, 2, 2, 2, 11, 2},			//  2 - Open Double quotes (Inválido)
+	{ 8, 1, 2, 11, 4, 5, 11, 12},		//  3 - Open Pipe (Invalido)
+	{ 8, 1, 2, 10, 6, 10, 11, 12},		//  4 - Open Infile (Inválido)
+	{ 8, 1, 2, 10, 10, 7, 11, 12},		//  5 - Open Outfile (Inválido)
+	{ 8, 1, 2, 10, 10, 10, 11, 12}, 	//  6 - Open Heredoc (Inválido)
+	{ 8, 1, 2, 10, 10, 10, 11, 12}, 	//  7 - Open Append (Inválido)
+	{ 8, 1, 2, 10, 10, 10, 11, 12}, 	//  8 - Space after open operator (Inválido)
+	{ 9, 1, 2, 3, 4, 5, 11, 12},		//  9 - Spaces between words (Válido)			[X]
+	{ 10, 10, 10, 10, 10, 10, 10, 10}, 	// 10 - Syntax Error - Invalid input (Inválido)
+	{ 10, 10, 10, 10, 10, 10, 10, 10}, 	// 11 - No manage characters (Inválido)
+	{ 9, 1, 2, 3, 4, 5, 11, 12}, 		// 12 - Reading text, not operator (Válido)		[X]
 	};
 
 	return (states[i][j]);
@@ -114,19 +115,20 @@ int	evaluate(t_fsm *fsm)
 {
 	fsm->old_state = 0;
 	fsm->i = 0;
-	while (fsm->i < ft_strlen(fsm->cmd_line))
+	while (fsm->i < (int)ft_strlen(fsm->cmd_line))
 	{
+		printf("evaluate\n");
 		fsm->cur_state = get_state(fsm->cur_state, get_idx(fsm->alphabet, fsm->cmd_line[fsm->i]));
 		fsm->old_state = fsm->cur_state;
 		fsm->i++;
 	}
+	return (fsm->cur_state);
 }
 
 void	init_automata(t_data *data, t_fsm *fsm)
 {
-	fsm->alphabet = ft_strdup(" \"'|<>\\();");
+	fsm->alphabet = ft_strdup(" '\"|<>\\();");
 	fsm->errors = NULL;
-	init_errors(data);
 	fsm->cmd_line = ft_strdup(data->cmd_line);
 	fsm->cur_state = 0;
 	fsm->old_state = 0;
@@ -145,4 +147,14 @@ int	automata(t_data *data)
 	data->fsm = fsm;
 	init_automata(data, data->fsm);
 	final_state = evaluate(data->fsm);
+	if (final_state == 0 || final_state == 9 || final_state == 12)
+	{
+		printf("Todo bien\n");
+		return (1);
+	}
+	else
+	{
+		printf("Syntax_error\n");
+		return (0);
+	}
 }
