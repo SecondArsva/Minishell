@@ -67,6 +67,7 @@ void	init_env(t_data *data, char **env)
 {
 	data->i = 0;
 
+	data->env = NULL;
 	if (!env)
 		data->env = NULL;
 	else
