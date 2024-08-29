@@ -154,6 +154,33 @@ encuentre dicho $$ me lo saltaré no expandiendo a nada ni escribiendo los dóla
 	Devolverá una lista enlazada tal y como acordé con Axel.
 */
 
+/* tok_grab_value
+ * Avanza el iterador en caso de ser necesario según
+ * el tipo y recoge el valor correspondiente.
+*/
+
+
+// tok_increase_node_type
+// Incrementa el total de nodos según su tipo y así saber cuantos hay.
+// Un contador, vamos...
+
+// tok_new_node
+// crea el nodo según el tipo
+
+// <
+// <<
+// >
+// >>
+// |
+// ""
+// ''
+// \S
+// char
+	// tokenizer
+	// build the list //list_building();
+	// reorganize the CMD nodes //list_reorganize();
+	// expand the enviroment variables //list_expander();
+
 --- automata.c
 
 /*

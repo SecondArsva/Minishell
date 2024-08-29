@@ -103,10 +103,6 @@ char *tok_value(t_data *data)
 	return (value);
 }
 
-/*
- * Avanza el iterador en caso de ser necesario según
- * el tipo y recoge el valor correspondiente.
-*/
 char *tok_grab_value(t_data *data, t_type opcode)
 {
 	if (opcode == PIPE)
@@ -122,8 +118,6 @@ char *tok_grab_value(t_data *data, t_type opcode)
 	return ("fool return");
 }
 
-// Incrementa el total de nodos según su tipo y así saber cuantos hay.
-// Un contador, vamos...
 void	tok_increase_node_type(t_data *data, t_type opcode)
 {
 	if (opcode == INFILE)
@@ -140,7 +134,6 @@ void	tok_increase_node_type(t_data *data, t_type opcode)
 		data->exec->n_pipes++;
 }
 
-// crea el nodo según el tipo
 void	tok_new_node(t_data *data, t_type opcode)
 {
 	t_token *new_node;
@@ -157,19 +150,6 @@ void	tok_new_node(t_data *data, t_type opcode)
 	tok_increase_node_type(data, opcode);
 }
 
-// <
-// <<
-// >
-// >>
-// |
-// ""
-// ''
-// \S
-// char
-
-	// build the list //list_building();
-	// reorganize the CMD nodes //list_reorganize();
-	// expand the enviroment variables //list_expander();
 void	tokenizer(t_data *data)
 {
 	data->i = 0;

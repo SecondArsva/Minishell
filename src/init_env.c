@@ -10,7 +10,7 @@ void	env_update_tail(t_env *head, t_env *new_tail)
 	tmp->next = new_tail;
 }
 
-char *env_grab_value(t_data *data, char **env)
+char	*env_grab_value(t_data *data, char **env)
 {
 	char	*value;
 	int		start;
@@ -27,13 +27,13 @@ char *env_grab_value(t_data *data, char **env)
 	while (env[data->i][data->j]
 	&& (env[data->i][data->j] != '=' && env[data->i][data->j + 1]))
 		data->j++;
-	value = ft_substr(env[data->i], start, (data->j+1) - start);
+	value = ft_substr(env[data->i], start, (data->j + 1) - start);
 	return (value);
 }
 
-char *env_grab_name(t_data *data, char **env)
+char	*env_grab_name(t_data *data, char **env)
 {
-	char *name;
+	char	*name;
 
 	name = NULL;
 	while (env[data->i][data->j] && env[data->i][data->j] != '=')
@@ -61,7 +61,6 @@ void	env_new_node(t_data *data, char **env)
 void	init_env(t_data *data, char **env)
 {
 	data->i = 0;
-
 	data->env = NULL;
 	if (!env)
 		data->env = NULL;
