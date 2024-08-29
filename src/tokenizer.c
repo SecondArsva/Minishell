@@ -1,34 +1,5 @@
 #include "../includes/minishell.h"
 
-/*
-	El tokenizador da por supuesto que la línea de comandos
-	introducida es correcta. Previo a él se usaría la
-	máquina de estados finita que determinaría si la línea
-	es correcta o no.
-
-	Devolverá una lista enlazada tal y como acordé con Axel.
-*/
-
-/*
-void	into_quotes_print(t_data *data)
-{
-	//data->i = 0;
-	while (data->cmd_line[data->i])
-	{
-		if (data->cmd_line[data->i] == '\"' && !data->in_d_quot && !data->in_s_quot)
-			data->in_d_quot = true;
-		else if (data->cmd_line[data->i] == '\"' && data->in_d_quot)
-			data->in_d_quot = false;
-		else if (data->cmd_line[data->i] == '\'' && !data->in_s_quot && !data->in_d_quot)
-			data->in_s_quot = true;
-		else if (data->cmd_line[data->i] == '\'' && data->in_s_quot)
-			data->in_s_quot = false;
-		printf("%c - d: %i s: %i \n", data->cmd_line[data->i], data->in_d_quot, data->in_s_quot);
-		data->i++;
-	}
-}
-*/
-
 void	tok_print_list(t_token *head)
 {
 	t_token	*tmp_lst;

@@ -55,18 +55,6 @@ void	quo_new_len(t_data *data, char *val)
 	data->exp_len++;
 }
 
-/*
- * A ver, en primer lugar esto va de disminuir el tamaño del string
- * debido a que busco procesar el valor del token ya expandido y quitar
- * las comillas por pares, ya que en este punto no voy a necesitarlas más.
- * 
- * He de limpiar por paquetes de dos según el tipo: la comilla que habre y
- * la comilla que cierra aquello que entrecomillan ha de quitarse del valor
- * final.
- * 
- * Por lo que el nuevo string será tan largo como:
- * 		strlen(node->value) - quotes_to_erase + 1 (para el NULL)
- * */
 void	manage_quotes(t_data *data, t_token *node)
 {
 	data->exp_str = NULL;

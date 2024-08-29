@@ -1,10 +1,5 @@
 #include "../includes/minishell.h"
 
-/*
- * Función para ver si el carácter es válido dentro del set de carácteres
- * aceptados por una variable de entorno.
- * Alfanuméricos (mayúsculas y minúsculas) y el guión bajo.
-*/
 int is_validenvchar(char c)
 {
 	if (c == '_' || (c >= 'a' && c <= 'z')
@@ -30,25 +25,6 @@ void	exp_into_quotes(t_data *data, char *value)
 		data->quoted = false;
 }
 
-/*
-* En esta función capturaré todos los caracteres que vayan detrás del dólar
-* hasta encontrarme con uno no válido dentro del nombre de las variables
-* de entorno, lo almacenaré y lo buscaré en el enviroment para expandir a
-* valor en caso de existir o expandirlo a nada en caso de que no exista.
-*/
-
-/*
-* echo hola$ hola$\0
-* hola$"" hola$''
-* '$U...SER'
-
-* $? Exit Status
-* $VAR Valid Variable
-* $"" en este caso el dolar ha de desaparecer
-* $NO_EXIST_VAR Invalid Variable expand to nothing
-*/ 
-
-/* Copia el carácter actual en el que se encuentra el iterador de value. */
 void	exp_cpy_char(t_data *data, char *val)
 {
 	data->exp_str[data->j] = val[data->i];
@@ -144,10 +120,6 @@ void	exp_val(t_data *data, char *val)
 	data->exp_str[data->j] = '\0';
 }
 
-// fill exp_str with the new value expanded
-// free node->value
-// upload node->value content to exp_str
-// free data->exp_str
 void	manage_expansion(t_data *data, t_token *node)
 {
 	data->exp_str = NULL;
@@ -158,10 +130,6 @@ void	manage_expansion(t_data *data, t_token *node)
 	free(data->exp_str);
 }
 
-/*
- * Revisa la lista de los tokens y procesa el valor de
- * los nodos en caso de encontrar un dólar.
- */
 void	expander(t_data *data)
 {
 	t_token *tmp_lst;

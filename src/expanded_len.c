@@ -41,49 +41,6 @@ void	exp_exit_status_len(t_data *data)
 	free(aux_str);
 }
 
-/* Función en la que se determinará que hacer según lo que haya después del
- * dólar, ya que no siempre que nos encontremos uno se gestionará de la
- * misma forma.
- * Al momento de entrar en esta función, el iterador sigue en la posición del
- * dólar a procesar, por lo que tendré que tener en cuenta los carácteres que
- * le sigan.
- * 
- * Casos:
- * 	- Se aumenta en +1 ya que el dólar se deberá pintar en todos los casos:
- * 		token$
- * 		token$ token2
- * 		'token$'
- * 		"token$"
- * 		'token$"'
- * 		"token$'"
- * 
- *  - Si el dólar no está entrecomillado y le sigue una comilla simple o doble,
- *    el dólar desaparece:
- * 		$""
- *      token$"USER"
- *      token$'USER'
- * 
- *  - Si encuentro dos dólares seguidos y siempre que no estén entre comillas
- *    simples se aumenta en +2 ya que ambos dólares de deben omitir al no
- *    poder acceder al PID:
- * 		$$
- * 		token$$
- * 		"$$token"
- * 
- *  - Si encuentro carácteres que podrían usarse a la hora de nombrar una
- *    variable de entorno (letras en mayúsculas y minúsculas, números y
- *    barras bajas) encapsulo tantos carácteres válidos como encuentre y
- *    verifico en el env si la expansión se hará al valor de una variable
- *    de entorno existente o si se expande a nada al no exsistir lo que sea
- *    que encuentre como supuesto nombre de variable a expandir, por lo que
- *    se aumentará el iterador o no según lo que se encuentre.
- * 
- *  - $? se expande al "Exit Status".
- * 
- *  - ¿Debería contar todo lo demás como un +1 y printeo del dólar? Si.
- *    echo $- = himBHs
- *    echo $% = $%
- */
 void	format_len(t_data *data, char *val)
 {
 	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
@@ -107,19 +64,6 @@ void	format_len(t_data *data, char *val)
 	}
 }
 
-/* Función que devuelve la longitud de un string tras expandirse
- * para hacer una correcta reserva de memoria. Expanded token len.
-
- * En caso de no haber un dólar se suma en uno tanto al iterador que recorre
- * el string como el entero a devolver. En caso de encontrar un dólar se
- * valorará el caso a través de la función format_len de forma similar al
- * especificador de formato en ft_printf.
- * 
- * - data->i recorre el valor a procesar.
- * - data->exp_len es el valor final del token expandido para una
- *   correcta reserva de memoria.
- * El "data->exp_len++;" es para el NULL del final.
- */
 int	exp_token_len(t_data *data, char *val)
 {
 	data->i = 0;

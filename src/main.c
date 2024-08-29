@@ -69,16 +69,16 @@ int	main(int argc, char **argv, char **env)
 	data = safe_malloc(sizeof(t_data));
 	init_data(data, env);
 	cmd_line = readline("Minishell$ ");
-	printf("cmd_line: %s\n", cmd_line);
 	data->cmd_line = ft_strdup(cmd_line);
-	automata(data);
-//	tokenizer(data);
+	if (!automata(data))
+		exit(2);
+	tokenizer(data);
 //	tok_print_list(data->tokens);
 	//tok_print_total_node_types(data->exec);
 	//env_print_list(data->env);
-//	expander(data);
+	expander(data);
 //	tok_print_list(data->tokens);
-//	quoter(data);
-//	tok_print_list(data->tokens);
+	quoter(data);
+	tok_print_list(data->tokens);
 	return (0);
 }

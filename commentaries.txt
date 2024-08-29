@@ -1,0 +1,240 @@
+07-07-24
+TODO
+getline loop
+automata
+tokenizer
+	count leng for the alloc in the expander
+	expander $
+	quote manage eraser
+
+TODO
+Hacer el Expander me está llevando más tiempo del que tenía pensado.
+En primer lugar voy a tener que hacer un str_len del resultado final que tendrá
+la línea finalmente expandida para hacer la reserva de memoria antes de expandir
+el resultado.
+A parte, necesito hacer lo mismo para trabajar con la posible variable encontrada
+tras un dolar.
+
+Como la expansión al PID fruto del $$ no hay que gestionarla, cada vez que me
+encuentre dicho $$ me lo saltaré no expandiendo a nada ni escribiendo los dólares.
+
+---
+
+/* manage_quotes
+ * A ver, en primer lugar esto va de disminuir el tamaño del string
+ * debido a que busco procesar el valor del token ya expandido y quitar
+ * las comillas por pares, ya que en este punto no voy a necesitarlas más.
+ * 
+ * He de limpiar por paquetes de dos según el tipo: la comilla que habre y
+ * la comilla que cierra aquello que entrecomillan ha de quitarse del valor
+ * final.
+ * 
+ * Por lo que el nuevo string será tan largo como:
+ * 		strlen(node->value) - quotes_to_erase + 1 (para el NULL)
+ * */
+
+ --- 
+
+// env_new_node
+// En un futuro puedo añadir otros dos parámetros char * a la función con los
+// que poder añadir directamente el nombre de la variable y su valor cuando
+// se vaya a hacer un export.
+// void	env_new_node(t_data *data, char **env, char *name, char *value)
+// y en caso de que sea null, que se pille del env tal y como está.
+
+---
+
+/* exp_token_len
+ * Función que devuelve la longitud de un string tras expandirse
+ * para hacer una correcta reserva de memoria. Expanded token len.
+
+ * En caso de no haber un dólar se suma en uno tanto al iterador que recorre
+ * el string como el entero a devolver. En caso de encontrar un dólar se
+ * valorará el caso a través de la función format_len de forma similar al
+ * especificador de formato en ft_printf.
+ * 
+ * - data->i recorre el valor a procesar.
+ * - data->exp_len es el valor final del token expandido para una
+ *   correcta reserva de memoria.
+ * El "data->exp_len++;" es para el NULL del final.
+ */
+
+ /* format_len
+ * Función en la que se determinará que hacer según lo que haya después del
+ * dólar, ya que no siempre que nos encontremos uno se gestionará de la
+ * misma forma.
+ * Al momento de entrar en esta función, el iterador sigue en la posición del
+ * dólar a procesar, por lo que tendré que tener en cuenta los carácteres que
+ * le sigan.
+ * 
+ * Casos:
+ * 	- Se aumenta en +1 ya que el dólar se deberá pintar en todos los casos:
+ * 		token$
+ * 		token$ token2
+ * 		'token$'
+ * 		"token$"
+ * 		'token$"'
+ * 		"token$'"
+ * 
+ *  - Si el dólar no está entrecomillado y le sigue una comilla simple o doble,
+ *    el dólar desaparece:
+ * 		$""
+ *      token$"USER"
+ *      token$'USER'
+ * 
+ *  - Si encuentro dos dólares seguidos y siempre que no estén entre comillas
+ *    simples se aumenta en +2 ya que ambos dólares de deben omitir al no
+ *    poder acceder al PID:
+ * 		$$
+ * 		token$$
+ * 		"$$token"
+ * 
+ *  - Si encuentro carácteres que podrían usarse a la hora de nombrar una
+ *    variable de entorno (letras en mayúsculas y minúsculas, números y
+ *    barras bajas) encapsulo tantos carácteres válidos como encuentre y
+ *    verifico en el env si la expansión se hará al valor de una variable
+ *    de entorno existente o si se expande a nada al no exsistir lo que sea
+ *    que encuentre como supuesto nombre de variable a expandir, por lo que
+ *    se aumentará el iterador o no según lo que se encuentre.
+ * 
+ *  - $? se expande al "Exit Status".
+ * 
+ *  - ¿Debería contar todo lo demás como un +1 y printeo del dólar? Si.
+ *    echo $- = himBHs (¿wtf?)
+ *    echo $% = $%
+ */
+
+ --- expander.c
+
+/* is_validenvchar
+ * Función para ver si el carácter es válido dentro del set de carácteres
+ * aceptados por una variable de entorno.
+ * Alfanuméricos (mayúsculas y minúsculas) y el guión bajo.
+*/
+
+/*
+* En esta función capturaré todos los caracteres que vayan detrás del dólar
+* hasta encontrarme con uno no válido dentro del nombre de las variables
+* de entorno, lo almacenaré y lo buscaré en el enviroment para expandir a
+* valor en caso de existir o expandirlo a nada en caso de que no exista.
+*/
+/*
+* echo hola$ hola$\0
+* hola$"" hola$''
+* '$U...SER'
+
+* $? Exit Status
+* $VAR Valid Variable
+* $"" en este caso el dolar ha de desaparecer
+* $NO_EXIST_VAR Invalid Variable expand to nothing
+*/ 
+
+/* exp_cpy_char
+ * Copia el carácter actual en el que se encuentra el iterador de value. */
+
+// manage_expansion
+// fill exp_str with the new value expanded
+// free node->value
+// upload node->value content to exp_str
+// free data->exp_str
+
+/* expander
+ * Revisa la lista de los tokens y procesa el valor de
+ * los nodos en caso de encontrar un dólar.
+ */
+
+--- tokenizer.c
+
+/*
+	El tokenizador da por supuesto que la línea de comandos
+	introducida es correcta. Previo a él se usaría la
+	máquina de estados finita que determinaría si la línea
+	es correcta o no.
+
+	Devolverá una lista enlazada tal y como acordé con Axel.
+*/
+
+--- automata.c
+
+/*
+ * La función del Autómata Finito Determinista o Finite State Machine,
+ * de este en concreto, será la de hacer un análisis de la línea recibida
+ * mediante la terminal y determinar si es sintácticamente válida o no.
+ * 
+ * Así si de simple. Aunque no va a resultar tan sencillo armarlo.
+ * 
+ * Estados:
+ *	- Empty line (Estado inicial) (Válido)
+ *	- Open single quotes (Inválido)
+ *	- Open double quotes (Inválido)
+ *	- Open Pipe (Invalido)
+ *	- Open infile (Inválido)
+ *	- Open outfile (Inválido)
+ *	- Open heredoc (Inválido)
+ *	- Open append (Inválido)
+ *	- Spaces without words (¿Inválido? Si) Refiere a los espacios tras un operador
+ *	- Reading text, not operator (Válido)
+ *	- Spaces betwen words (Válido)
+ *	- Invalid input (Inválido)
+ *
+ * 
+ * columns	 \s, ', ", |, <, >, invalid, anychar
+ * 
+ * //  0 - Empty line (Estado inicial) (Válido)	[X]
+ * //  1 - Open Single quotes (Inválido)
+ * //  2 - Open Double quotes (Inválido)
+ * //  3 - Open Pipe (Invalido)
+ * //  4 - Open Infile (Inválido)
+ * //  5 - Open Outfile (Inválido)
+ * //  6 - Open Heredoc (Inválido)
+ * //  7 - Open Append (Inválido)
+ * //  8 - Space after open operator (Inválido)
+ * //  9 - Spaces between words (Válido)			[X]
+ * // 10 - Syntax Error - Invalid input (Inválido)
+ * // 11 - No manage characters (Inválido)
+ * // 12 - Reading text, not operator (Válido)		[X]
+ * 
+ * La función "automata" devolverá un valor boleano con el que se determinará
+ * si la línea tiene o no errores sintácticos, según el estado en el que finalize
+ * para saber si se debe seguir con la ejecución de la minishell o no.
+ * 
+ * "evaluate" será la función de transición de estados que navegará sobre la
+ * matriz de estados.
+ * La matriz de estados es la variable "states" de la función "get_state"
+ * Con "get_state" navegaremos la matriz mediante dos iteradores ("i" y "j")
+ * que nos llevarán a un entero de la matriz el cuál será retornado.
+ * Las filas de "state" simbolizan cada uno de los estados y las columnas
+ * determinan a qué estado se ha de transicionar desde el estado actual
+ * según el carácter encontrado.
+ * Para ello es importante construir el alfabeto de la fsm siguiendo el mismo
+ * orden que ocupen los carácteres a tratar según la columna en la que se
+ * encuentre cada uno de ellos al haber creado la matriz de estados.
+ * Esto es importante porque al usar "get_state" capturaremos el estado al que
+ * transicionaremos desde el estado actual ("j") gracias a la función "get_idx"
+ * que nos devolverá la posición del carácter coincidente dentro del
+ * abecedario, teniendo así la columna exacta con el int del nuevo estado al
+ * que deberemos movernos.
+ * 
+ * Mi función "get_idx" recibirá el abecedario y el carácter a encontrar.
+ * Pondré un ejemplo simple con el abecedario simplificado:
+ * 		Abecedario:	"\s\"\'|<>"
+ * 		Índices:	  0 1 2345
+ * "get_idx" busca en el abecedario el carácter a encontrar y devuélve el
+ * indice en el que se encuentra dicho caracter. Como tengo 8 columnas
+ * en la matriz de estados "state", en caso de no darse ninguna
+ * coincidencia se devolvera el número 8 dando a entender que se encontró
+ * un carácter válido que no es un operador.
+ * Con esta lógica, puedo implementar los carácteres "\", "(", ")" y ";" y
+ * tratar sus posiciones como un único índice devuelto con el que trabajar
+ * en la matriz en una nueva columna referente a estos carácteres no
+ * gestionables para poder tratar un nuevo estado inválido en caso de dar con
+ * alguno de estos carácteres.
+ * 		Abecedario:	"\s\"\'|<>\\();"
+ * 		Arr_pos:	  0 1 2345 6789
+ * En este ejemplo si en "get_idx" no se encuentra un caracter coincidente se
+ * devolverá un 7 como el índice que refiere a esa lista de letras mayúsculas
+ * o minisculas, números, guiónes, etc; en resumen, cualquier carácter válido que
+ * no es un operador. Y en caso de encontrar "\", "(", ")" o ";" se hará que si
+ * "char_pos" está entre el 6 y el 9 (ambos incluídos) se devuelva un 6 como
+ * índice de la columna con la que se ha de capturar el valor.
+*/
