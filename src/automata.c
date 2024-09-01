@@ -1,5 +1,19 @@
 #include "../includes/minishell.h"
 
+/* 
+ * Comprueba el comportamiento de bash ante los carácteres que no se
+ * gestionan en caso de estar entrecomillados para actualizar la matriz de
+ * estados en caso de ser necesario. Añade el & a estos carácteres.
+ * No lo había tenido en cuenta hasta que no me lo ha dicho Axel.
+ * echo "\();&"
+ *       \();&
+ * echo '\();&'
+ * 		 \();&
+ * Actúan de la misma forma. Si están entre comillas se interpretan como
+ * carácteres planos. Así que he de añardir el "&" al abecedario y gestionar
+ * correctamente estos carácteres en caso de encontrarlos entrecomillados
+ * cambiando algunos indices de la matriz de estados y ampliar "get_idx"
+*/
 int	get_idx(char *alphabet, char anal)
 {
 	int	i;
@@ -15,7 +29,7 @@ int	get_idx(char *alphabet, char anal)
 	}
 	if (i >= 0 && i <= 5)
 		index = i;
-	else if (i >= 6 && i <= 9)
+	else if (i >= 6 && i <= 10)
 		index = 6;
 	else
 		index = 7;
@@ -28,8 +42,8 @@ int	get_state(int i, int j)
 //	 \s, ', ", |, <, >, invalid, anychar
 //
 	{ 0, 1, 2, 10, 4, 5, 11, 12},		//  0 - Empty line (Estado inicial) (Válido)	[X]
-	{ 1, 9, 1, 1, 1, 1, 11, 1},			//  1 - Open Single quotes (Inválido)
-	{ 2, 2, 9, 2, 2, 2, 11, 2},			//  2 - Open Double quotes (Inválido)
+	{ 1, 9, 1, 1, 1, 1, 1, 1},			//  1 - Open Single quotes (Inválido)
+	{ 2, 2, 9, 2, 2, 2, 2, 2},			//  2 - Open Double quotes (Inválido)
 	{ 8, 1, 2, 11, 4, 5, 11, 12},		//  3 - Open Pipe (Invalido)
 	{ 8, 1, 2, 10, 6, 10, 11, 12},		//  4 - Open Infile (Inválido)
 	{ 8, 1, 2, 10, 10, 7, 11, 12},		//  5 - Open Outfile (Inválido)
@@ -61,7 +75,7 @@ int	evaluate(t_fsm *fsm)
 
 void	init_automata(t_data *data, t_fsm *fsm)
 {
-	fsm->alphabet = ft_strdup(" '\"|<>\\();");
+	fsm->alphabet = ft_strdup(" '\"|<>\\();&");
 	fsm->cmd_line = ft_strdup(data->cmd_line);
 	fsm->cur_state = 0;
 	fsm->old_state = 0;

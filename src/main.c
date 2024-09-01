@@ -54,7 +54,7 @@ void	env_print_list(t_env *head)
 	tmp = head;
 	while (tmp)
 	{
-		printf("%s=\"%s\"\n", tmp->var_name, tmp->var_value);
+		printf("%s=%s\n", tmp->var_name, tmp->var_value);
 		tmp = tmp->next;
 	}
 }
@@ -75,9 +75,9 @@ int	main(int argc, char **argv, char **env)
 	tokenizer(data);
 //	tok_print_list(data->tokens);
 	//tok_print_total_node_types(data->exec);
-	//env_print_list(data->env);
+	env_print_list(data->env);
 	expander(data);
-//	tok_print_list(data->tokens);
+	tok_print_list(data->tokens);
 	quoter(data);
 	tok_print_list(data->tokens);
 	return (0);

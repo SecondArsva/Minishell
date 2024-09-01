@@ -21,6 +21,37 @@ char	*env_grab_value(t_data *data, char **env)
 		data->j++;
 	else
 		return (NULL);
+	start = data->j;
+	while (env[data->i][data->j]
+	&& (env[data->i][data->j] != '=' && env[data->i][data->j + 1]))
+		data->j++;
+	if (env[data->i][start] == '"')
+	{
+		value = ft_strdup("'");
+		value = ft_strjoin(value, ft_substr(env[data->i], start, (data->j + 1) - start));
+		value = ft_strjoin(value, "'");
+	}
+	else
+	{
+		value = ft_strdup("\"");
+		value = ft_strjoin(value, ft_substr(env[data->i], start, (data->j + 1) - start));
+		value = ft_strjoin(value, "\"");
+	}
+	return (value);
+}
+
+/*
+char	*env_grab_value(t_data *data, char **env)
+{
+	char	*value;
+	int		start;
+
+	value = NULL;
+	start = 0;
+	if (env[data->i][data->j] && env[data->i][data->j] == '=')
+		data->j++;
+	else
+		return (NULL);
 	if (env[data->i][data->j] && env[data->i][data->j] == '"')
 		data->j++;
 	start = data->j;
@@ -30,6 +61,7 @@ char	*env_grab_value(t_data *data, char **env)
 	value = ft_substr(env[data->i], start, (data->j + 1) - start);
 	return (value);
 }
+*/
 
 char	*env_grab_name(t_data *data, char **env)
 {

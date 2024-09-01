@@ -1,9 +1,9 @@
 #include "../includes/minishell.h"
 
-int is_validenvchar(char c)
+int	is_validenvchar(char c)
 {
 	if (c == '_' || (c >= 'a' && c <= 'z')
-	|| (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+		|| (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
 		return (1);
 	else
 		return (0);
@@ -41,7 +41,8 @@ void	env_check_var_exp(t_data *data, char *finded_var)
 	i = 0;
 	while (env)
 	{
-		if (!ft_strncmp(finded_var, env->var_name, ft_strlen(env->var_name) + 1))
+		if (!ft_strncmp(finded_var, env->var_name,
+				ft_strlen(env->var_name) + 1))
 		{
 			while (env->var_value[i])
 			{
@@ -59,7 +60,7 @@ void	env_exp(t_data *data, char *val)
 {
 	char	*finded_var;
 	int		entry_value;
-	
+
 	finded_var = NULL;
 	data->i++;
 	entry_value = data->i;
@@ -90,9 +91,10 @@ void	exp_exit_status(t_data *data)
 void	format_exp(t_data *data, char *val)
 {
 	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
-	|| (val[data->i + 1] == '"' && data->in_d_quot))
+		|| (val[data->i + 1] == '"' && data->in_d_quot))
 		exp_cpy_char(data, val);
-	else if ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'') && !data->quoted)
+	else if ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'')
+		&& !data->quoted)
 		data->i++;
 	else if (val[data->i + 1] == '$' && !data->in_s_quot)
 		data->i += 2;
@@ -123,7 +125,8 @@ void	exp_val(t_data *data, char *val)
 void	manage_expansion(t_data *data, t_token *node)
 {
 	data->exp_str = NULL;
-	data->exp_str = safe_calloc(exp_token_len(data, node->value), sizeof(char *));
+	data->exp_str = safe_calloc(exp_token_len(data, node->value),
+			sizeof(char *));
 	exp_val(data, node->value);
 	free(node->value);
 	node->value = ft_strdup(data->exp_str);
@@ -132,7 +135,7 @@ void	manage_expansion(t_data *data, t_token *node)
 
 void	expander(t_data *data)
 {
-	t_token *tmp_lst;
+	t_token	*tmp_lst;
 
 	tmp_lst = data->tokens;
 	while (tmp_lst)

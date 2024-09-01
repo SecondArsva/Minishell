@@ -72,7 +72,8 @@ int	tok_into_quotes(t_data *data)
 		data->in_d_quot = true;
 	else if (data->cmd_line[data->j] == '\"' && data->in_d_quot)
 		data->in_d_quot = false;
-	else if (data->cmd_line[data->j] == '\'' && !data->in_s_quot && !data->in_d_quot)
+	else if (data->cmd_line[data->j] == '\''
+		&& !data->in_s_quot && !data->in_d_quot)
 		data->in_s_quot = true;
 	else if (data->cmd_line[data->j] == '\'' && data->in_s_quot)
 		data->in_s_quot = false;
@@ -82,7 +83,7 @@ int	tok_into_quotes(t_data *data)
 		return (0);
 }
 
-char *tok_value(t_data *data)
+char	*tok_value(t_data *data)
 {
 	char	*value;
 
@@ -93,8 +94,9 @@ char *tok_value(t_data *data)
 	{
 		if (tok_into_quotes(data))
 			data->j++;
-		else if (!tok_into_quotes(data) && ft_strchr(" <>|", data->cmd_line[data->j]))
-			break;
+		else if (!tok_into_quotes(data)
+			&& ft_strchr(" <>|", data->cmd_line[data->j]))
+			break ;
 		else if (!tok_into_quotes(data))
 			data->j++;
 	}
@@ -103,7 +105,7 @@ char *tok_value(t_data *data)
 	return (value);
 }
 
-char *tok_grab_value(t_data *data, t_type opcode)
+char	*tok_grab_value(t_data *data, t_type opcode)
 {
 	if (opcode == PIPE)
 		data->i++;
@@ -136,7 +138,7 @@ void	tok_increase_node_type(t_data *data, t_type opcode)
 
 void	tok_new_node(t_data *data, t_type opcode)
 {
-	t_token *new_node;
+	t_token	*new_node;
 
 	new_node = NULL;
 	new_node = (t_token *) safe_malloc(sizeof(t_token));
@@ -161,9 +163,11 @@ void	tokenizer(t_data *data)
 			data->i++;
 		else if (data->cmd_line[data->i] == '|')
 			tok_new_node(data, PIPE);
-		else if (data->cmd_line[data->i] == '<' && data->cmd_line[data->i+1] == '<')
+		else if (data->cmd_line[data->i] == '<'
+			&& data->cmd_line[data->i + 1] == '<')
 			tok_new_node(data, HEREDOC);
-		else if (data->cmd_line[data->i] == '>' && data->cmd_line[data->i+1] == '>')
+		else if (data->cmd_line[data->i] == '>'
+			&& data->cmd_line[data->i + 1] == '>')
 			tok_new_node(data, APPEND);
 		else if (data->cmd_line[data->i] == '<')
 			tok_new_node(data, INFILE);

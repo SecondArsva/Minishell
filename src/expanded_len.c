@@ -7,7 +7,8 @@ void	env_check_var_len(t_data *data, char *finded_var)
 	env = data->env;
 	while (env)
 	{
-		if (!ft_strncmp(finded_var, env->var_name, ft_strlen(env->var_name) + 1))
+		if (!ft_strncmp(finded_var, env->var_name,
+				ft_strlen(env->var_name) + 1))
 		{
 			data->exp_len += ft_strlen(env->var_value);
 			return ;
@@ -20,7 +21,7 @@ void	env_len(t_data *data, char *val)
 {
 	char	*finded_var;
 	int		entry_value;
-	
+
 	finded_var = NULL;
 	data->i++;
 	entry_value = data->i;
@@ -44,12 +45,13 @@ void	exp_exit_status_len(t_data *data)
 void	format_len(t_data *data, char *val)
 {
 	if ((!val[data->i + 1] || val[data->i + 1] == ' ' || data->in_s_quot)
-	|| (val[data->i + 1] == '"' && data->in_d_quot))
+		|| (val[data->i + 1] == '"' && data->in_d_quot))
 	{
 		data->i++;
 		data->exp_len++;
 	}
-	else if ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'') && !data->quoted)
+	else if ((val[data->i + 1] == '\"' || val[data->i + 1] == '\'')
+		&& !data->quoted)
 		data->i++;
 	else if (val[data->i + 1] == '$' && !data->in_s_quot)
 		data->i += 2;
@@ -68,7 +70,6 @@ int	exp_token_len(t_data *data, char *val)
 {
 	data->i = 0;
 	data->exp_len = 0;
-
 	while (val[data->i])
 	{
 		exp_into_quotes(data, val);

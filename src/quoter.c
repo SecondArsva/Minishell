@@ -2,7 +2,7 @@
 
 void	quo_new_val(t_data *data, char *val)
 {
-	char actual_quote;
+	char	actual_quote;
 
 	actual_quote = '*';
 	data->i = 0;
@@ -10,13 +10,13 @@ void	quo_new_val(t_data *data, char *val)
 	while (val[data->i])
 	{
 		if ((val[data->i] == '"' || val[data->i] == '\'')
-		&& !ft_strchr("\"\'", actual_quote))
+			&& !ft_strchr("\"\'", actual_quote))
 		{
 			actual_quote = val[data->i];
 			data->i++;
 		}
 		else if (ft_strchr("\"\'", actual_quote)
-		&& val[data->i] == actual_quote)
+			&& val[data->i] == actual_quote)
 		{
 			actual_quote = '*';
 			data->i++;
@@ -29,14 +29,14 @@ void	quo_new_val(t_data *data, char *val)
 
 void	quo_new_len(t_data *data, char *val)
 {
-	char act_quote;
+	char	act_quote;
 
 	act_quote = '*';
 	data->exp_len = 0;
 	while (val[data->i])
 	{
 		if ((val[data->i] == '"' || val[data->i] == '\'')
-		&& !ft_strchr("\"\'", act_quote))
+			&& !ft_strchr("\"\'", act_quote))
 		{
 			act_quote = val[data->i];
 			data->i++;
@@ -68,15 +68,15 @@ void	manage_quotes(t_data *data, t_token *node)
 
 void	quoter(t_data *data)
 {
-	t_token *tmp_lst;
+	t_token	*tmp_lst;
 
 	tmp_lst = data->tokens;
 	while (tmp_lst)
 	{
 		data->i = 0;
 		data->j = 0;
-		if (tmp_lst->value
-		&& (ft_strchr(tmp_lst->value, '"') || ft_strchr(tmp_lst->value, '\'')))
+		if (tmp_lst->value && (ft_strchr(tmp_lst->value, '"')
+				|| ft_strchr(tmp_lst->value, '\'')))
 			manage_quotes(data, tmp_lst);
 		tmp_lst = tmp_lst->next;
 	}
