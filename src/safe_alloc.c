@@ -44,3 +44,39 @@ char	**safe_matrixdup(char **original)
 	}
 	return (duplicate);
 }
+
+char	*safe_strjoin(char const *s1, char const *s2)
+{
+	char	*new_ptr;
+	size_t	s1_len;
+	size_t	s2_len;
+
+	if (!s1 || !s2)
+		return (0);
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	new_ptr = safe_calloc(s1_len + s2_len + 1, sizeof(char));
+	if (!new_ptr)
+		return (0);
+	ft_strlcpy(new_ptr, s1, s1_len + 1);
+	ft_strlcat(new_ptr + s1_len, s2, s2_len + 1);
+	return (new_ptr);
+}
+
+char	*safe_strdup(const char *s1)
+{
+	int		i;
+	char	*new_ptr;
+
+	i = 0;
+	new_ptr = safe_malloc(ft_strlen(s1) + 1);
+	if (!new_ptr)
+		return (0);
+	while (s1[i] != '\0')
+	{
+		new_ptr[i] = s1[i];
+		i++;
+	}
+	new_ptr[i] = '\0';
+	return (new_ptr);
+}
