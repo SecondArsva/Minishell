@@ -100,7 +100,7 @@ char	*tok_value(t_data *data)
 		else if (!tok_into_quotes(data))
 			data->j++;
 	}
-	value = ft_substr(data->cmd_line, data->i, (data->j) - data->i);
+	value = safe_substr(data->cmd_line, data->i, (data->j) - data->i);
 	data->i = data->j;
 	return (value);
 }

@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = safe_malloc(sizeof(t_data));
 	init_data(data, env);
 	cmd_line = readline("Minishell$ ");
-	data->cmd_line = ft_strdup(cmd_line);
+	data->cmd_line = safe_strdup(cmd_line);
 	if (!automata(data))
 		exit(2);
 	tokenizer(data);

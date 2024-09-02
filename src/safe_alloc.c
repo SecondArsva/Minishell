@@ -80,3 +80,79 @@ char	*safe_strdup(const char *s1)
 	new_ptr[i] = '\0';
 	return (new_ptr);
 }
+char	*safe_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	j;
+	char	*new_ptr;
+
+	j = 0;
+	if (!s)
+		return (0);
+	if (start < ft_strlen(s))
+	{
+		if (len > ft_strlen(s) - start)
+			len = ft_strlen(s) - start;
+		new_ptr = safe_calloc(len + 1, sizeof(char));
+		if (!new_ptr)
+			return (0);
+		while (s[start] != '\0' && j < len)
+		{
+			new_ptr[j] = s[start + j];
+			j++;
+		}
+		new_ptr[j] = '\0';
+		return (new_ptr);
+	}
+	new_ptr = safe_calloc(1, sizeof(char));
+	if (!new_ptr)
+		return (0);
+	return (new_ptr);
+}
+
+static size_t	ft_digitcounter(long int n)
+{
+	size_t	digits;
+
+	if (n <= 0)
+		digits = 1;
+	else
+	{
+		digits = 0;
+		n = n * 1;
+	}
+	while (n != 0)
+	{
+		n = n / 10;
+		digits++;
+	}
+	return (digits);
+}
+
+char	*safe_itoa(int n)
+{
+	size_t		len;
+	size_t		isneg;
+	char		*new_ptr;
+
+	if (n == -2147483648)
+		return (safe_strdup("-2147483648"));
+	len = ft_digitcounter(n);
+	isneg = 0;
+	new_ptr = safe_malloc((len + 1) * sizeof(char));
+	if (!new_ptr)
+		return (0);
+	if (n < 0)
+	{
+		new_ptr[0] = '-';
+		n = n * -1;
+		isneg = 1;
+	}
+	new_ptr[len] = 0;
+	while (len > (0 + isneg))
+	{
+		new_ptr[len - 1] = n % 10 + '0';
+		n = n / 10;
+		len--;
+	}
+	return (new_ptr);
+}

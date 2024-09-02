@@ -75,8 +75,8 @@ int	evaluate(t_fsm *fsm)
 
 void	init_automata(t_data *data, t_fsm *fsm)
 {
-	fsm->alphabet = ft_strdup(" '\"|<>\\();&");
-	fsm->cmd_line = ft_strdup(data->cmd_line);
+	fsm->alphabet = safe_strdup(" '\"|<>\\();&");
+	fsm->cmd_line = safe_strdup(data->cmd_line);
 	fsm->cur_state = 0;
 	fsm->old_state = 0;
 	fsm->i = 0;

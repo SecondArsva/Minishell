@@ -62,7 +62,7 @@ void	manage_quotes(t_data *data, t_token *node)
 	data->exp_str = safe_calloc(data->exp_len, sizeof(char *));
 	quo_new_val(data, node->value);
 	free(node->value);
-	node->value = ft_strdup(data->exp_str);
+	node->value = safe_strdup(data->exp_str);
 	free(data->exp_str);
 }
 

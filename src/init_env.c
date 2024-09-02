@@ -14,15 +14,15 @@ char*	env_quoting_value(t_data *data, char **env, char *value, int start)
 {
 	if (env[data->i][start] == '"')
 	{
-		value = ft_strdup("'");
-		value = ft_strjoin(value, ft_substr(env[data->i], start, (data->j + 1) - start));
-		value = ft_strjoin(value, "'");
+		value = safe_strdup("'");
+		value = safe_strjoin(value, safe_substr(env[data->i], start, (data->j + 1) - start));
+		value = safe_strjoin(value, "'");
 	}
 	else
 	{
-		value = ft_strdup("\"");
-		value = ft_strjoin(value, ft_substr(env[data->i], start, (data->j + 1) - start));
-		value = ft_strjoin(value, "\"");
+		value = safe_strdup("\"");
+		value = safe_strjoin(value, safe_substr(env[data->i], start, (data->j + 1) - start));
+		value = safe_strjoin(value, "\"");
 	}
 	return (value);
 }
@@ -53,7 +53,7 @@ char	*env_grab_name(t_data *data, char **env)
 	name = NULL;
 	while (env[data->i][data->j] && env[data->i][data->j] != '=')
 		data->j++;
-	name = ft_substr(env[data->i], 0, data->j);
+	name = safe_substr(env[data->i], 0, data->j);
 	return (name);
 }
 

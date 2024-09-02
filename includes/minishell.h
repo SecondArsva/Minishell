@@ -10,20 +10,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
-/*
-typedef enum	e_states
-{
-	EMPTY,
-	SPACE,			// " "
-	DOBLE_QUOTES,	// ""
-	SINGLE_QUOTE,	// ''
-	PIPE,			// |
-	INFILE,			// <
-	OUTFILE,		// >
-	HEREDOC,		// <<
-	APPEND,			// >>
-}				t_states;
-*/
 
 typedef enum	e_type
 {
@@ -35,34 +21,20 @@ typedef enum	e_type
 	PIPE,
 }				t_type;
 
-/*
-typedef struct s_token
-{
-	t_type			type;
-	char			*filename;
-	char			**command;
-	char			*end_of_file;
-	struct s_token	*next;
-}				t_token;
-*/
-
 typedef struct	s_token
 {
 	t_type			type;
-	char			*value; // for debbuging
-	//char			**value;
+	char			*value;
 	struct s_token	*next;
 }				t_token;
 
 typedef struct	s_fsm
 {
 	char	*alphabet;	// alfabeto
-	char	**errors;	// matriz de errores
 	char	*cmd_line;
 	int		cur_state;	// estado actual
 	int		old_state;	// estado previo
 	int		i;
-	int		j;
 	int		(*get_state)(int state, int abc_idx);
 }				t_fsm;
 
@@ -104,6 +76,10 @@ typedef struct s_data
 void	*safe_malloc(size_t bytes);
 void	*safe_calloc(size_t count, size_t size);
 char	**safe_matrixdup(char **original);
+char	*safe_strjoin(char const *s1, char const *s2);
+char	*safe_strdup(const char *s1);
+char	*safe_substr(char const *s, unsigned int start, size_t len);
+char	*safe_itoa(int n);
 
 //	### - INIT ENV - ###
 void	init_env(t_data *data, char **env);

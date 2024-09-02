@@ -66,7 +66,7 @@ void	env_exp(t_data *data, char *val)
 	entry_value = data->i;
 	while (val[data->i] && is_validenvchar(val[data->i]))
 		data->i++;
-	finded_var = ft_substr(val, entry_value, (data->i - entry_value));
+	finded_var = safe_substr(val, entry_value, (data->i - entry_value));
 	env_check_var_exp(data, finded_var);
 	free(finded_var);
 }
@@ -77,7 +77,7 @@ void	exp_exit_status(t_data *data)
 	int		i;
 
 	i = 0;
-	aux_str = ft_itoa(data->exit_status);
+	aux_str = safe_itoa(data->exit_status);
 	data->i += 2;
 	while (aux_str[i])
 	{
@@ -129,7 +129,7 @@ void	manage_expansion(t_data *data, t_token *node)
 			sizeof(char *));
 	exp_val(data, node->value);
 	free(node->value);
-	node->value = ft_strdup(data->exp_str);
+	node->value = safe_strdup(data->exp_str);
 	free(data->exp_str);
 }
 

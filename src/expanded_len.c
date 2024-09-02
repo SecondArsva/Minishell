@@ -27,7 +27,7 @@ void	env_len(t_data *data, char *val)
 	entry_value = data->i;
 	while (val[data->i] && is_validenvchar(val[data->i]))
 		data->i++;
-	finded_var = ft_substr(val, entry_value, (data->i - entry_value));
+	finded_var = safe_substr(val, entry_value, (data->i - entry_value));
 	env_check_var_len(data, finded_var);
 	free(finded_var);
 }
@@ -36,7 +36,7 @@ void	exp_exit_status_len(t_data *data)
 {
 	char	*aux_str;
 
-	aux_str = ft_itoa(data->exit_status);
+	aux_str = safe_itoa(data->exit_status);
 	data->i += 2;
 	data->exp_len += ft_strlen(aux_str);
 	free(aux_str);
