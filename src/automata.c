@@ -96,5 +96,5 @@ int	automata(t_data *data)
 	if (final_state == 0 || final_state == 9 || final_state == 12)
 		return (1);
 	else
-		return (ft_printf_error("Syntax error\n"), 0);
+		return (ft_printf_error("Minishell: syntax error\n"), 0);
 }

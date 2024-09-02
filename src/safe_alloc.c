@@ -25,26 +25,6 @@ void	*safe_calloc(size_t count, size_t size)
 	return (ptr);
 }
 
-char	**safe_matrixdup(char **original)
-{
-	char	**duplicate;
-	size_t	i;
-
-	i = 0;
-	while (original[i])
-		i++;
-	duplicate = safe_calloc(i + 1, sizeof(char **));
-	i = 0;
-	while (original[i])
-	{
-		duplicate[i] = ft_substr(original[i], 0, -1);
-		if (!duplicate[i])
-			exit(EXIT_FAILURE);
-		i++;
-	}
-	return (duplicate);
-}
-
 char	*safe_strjoin(char const *s1, char const *s2)
 {
 	char	*new_ptr;
