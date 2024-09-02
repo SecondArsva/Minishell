@@ -10,21 +10,8 @@ void	env_update_tail(t_env *head, t_env *new_tail)
 	tmp->next = new_tail;
 }
 
-char	*env_grab_value(t_data *data, char **env)
+char*	env_quoting_value(t_data *data, char **env, char *value, int start)
 {
-	char	*value;
-	int		start;
-
-	value = NULL;
-	start = 0;
-	if (env[data->i][data->j] && env[data->i][data->j] == '=')
-		data->j++;
-	else
-		return (NULL);
-	start = data->j;
-	while (env[data->i][data->j]
-	&& (env[data->i][data->j] != '=' && env[data->i][data->j + 1]))
-		data->j++;
 	if (env[data->i][start] == '"')
 	{
 		value = ft_strdup("'");
@@ -40,7 +27,6 @@ char	*env_grab_value(t_data *data, char **env)
 	return (value);
 }
 
-/*
 char	*env_grab_value(t_data *data, char **env)
 {
 	char	*value;
@@ -52,16 +38,13 @@ char	*env_grab_value(t_data *data, char **env)
 		data->j++;
 	else
 		return (NULL);
-	if (env[data->i][data->j] && env[data->i][data->j] == '"')
-		data->j++;
 	start = data->j;
 	while (env[data->i][data->j]
 	&& (env[data->i][data->j] != '=' && env[data->i][data->j + 1]))
 		data->j++;
-	value = ft_substr(env[data->i], start, (data->j + 1) - start);
+	value = env_quoting_value(data, env, value, start);
 	return (value);
 }
-*/
 
 char	*env_grab_name(t_data *data, char **env)
 {
