@@ -145,7 +145,7 @@ void	expander(t_data *data)
 		data->in_d_quot = 0;
 		data->in_s_quot = 0;
 		data->quoted = 0;
-		if (tmp_lst->value && ft_strchr(tmp_lst->value, '$'))
+		if (tmp_lst->value && ft_strchr(tmp_lst->value, '$') && tmp_lst->type != HEREDOC)
 			manage_expansion(data, tmp_lst);
 		tmp_lst = tmp_lst->next;
 	}

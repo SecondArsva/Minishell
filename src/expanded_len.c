@@ -2,6 +2,7 @@
 
 void	env_check_var_len(t_data *data, char *finded_var)
 {
+	
 	t_env	*env;
 
 	env = data->env;
