@@ -44,7 +44,7 @@ int	get_state(int i, int j)
 	{ 0, 1, 2, 10, 4, 5, 11, 12},		//  0 - Empty line (Estado inicial) (Válido)	[X]
 	{ 1, 9, 1, 1, 1, 1, 1, 1},			//  1 - Open Single quotes (Inválido)
 	{ 2, 2, 9, 2, 2, 2, 2, 2},			//  2 - Open Double quotes (Inválido)
-	{ 8, 1, 2, 11, 4, 5, 11, 12},		//  3 - Open Pipe (Invalido)
+	{ 3, 1, 2, 11, 4, 5, 11, 12},		//  3 - Open Pipe (Invalido)
 	{ 8, 1, 2, 10, 6, 10, 11, 12},		//  4 - Open Infile (Inválido)
 	{ 8, 1, 2, 10, 10, 7, 11, 12},		//  5 - Open Outfile (Inválido)
 	{ 8, 1, 2, 10, 10, 10, 11, 12}, 	//  6 - Open Heredoc (Inválido)

@@ -11,7 +11,7 @@ void	init_exec(t_data *data)
 	data->exec->n_pipes = 0;
 }
 
-void	init_data(t_data *data, char **env)
+void	init_data(t_data *data, char **env, t_env **env_lst)
 {
 	data->tokens = NULL;
 	data->fsm = NULL;
@@ -23,9 +23,15 @@ void	init_data(t_data *data, char **env)
 	data->in_d_quot = 0;
 	data->quoted = 0;
 	data->exit_status = 0;
-	init_env(data, env);
 	init_exec(data);
 	data->fsm = NULL;
+	if (!(*env_lst))
+	{
+		init_env(data, env);
+		*env_lst = data->env;
+	}
+	else
+		data->env = *env_lst;
 }
 
 void	print_data(t_data *data)
@@ -63,11 +69,13 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 	char	*cmd_line;
+	t_env	*env_lst;
 
 	(void)argc;
 	(void)argv;
+	env_lst = NULL;
 	data = safe_malloc(sizeof(t_data));
-	init_data(data, env);
+	init_data(data, env, &env_lst);
 	cmd_line = readline("Minishell$ ");
 	data->cmd_line = safe_strdup(cmd_line);
 	if (!automata(data))
@@ -80,5 +88,7 @@ int	main(int argc, char **argv, char **env)
 	tok_print_list(data->tokens);
 	quoter(data);
 	tok_print_list(data->tokens);
+	printf("dat p: %p\n", data->env);
+	printf("env p: %p\n", env_lst);
 	return (0);
 }
