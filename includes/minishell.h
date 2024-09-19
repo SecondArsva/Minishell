@@ -72,6 +72,9 @@ typedef struct s_data
 	t_fsm	*fsm;
 }				t_data;
 
+// ### - MAIN - ###
+void	env_print_list(t_env *head);
+
 //	### - SAFE ALLOC - ###
 void	*safe_malloc(size_t bytes);
 void	*safe_calloc(size_t count, size_t size);
@@ -104,5 +107,11 @@ void	quoter(t_data *data);
 //	### - AUTOMATA - ###
 int	automata(t_data *data);
 int	get_state(int i, int j);
+
+// ### - BUILTINS - ###
+void	my_env(t_data *data);
+//void	my_export(t_data *data);
+void	my_unset(t_data *data, t_token *current_token, t_env **env_lst);
+
 
 #endif
