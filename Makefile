@@ -15,6 +15,7 @@ SRC =	src/main.c			\
 		src/expanded_len.c	\
 		src/quoter.c		\
 		src/automata.c		\
+		src/builtins.c		\
 
 OBJS = $(SRC:%.c=%.o)
 
