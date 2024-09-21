@@ -26,6 +26,7 @@ typedef struct	s_token
 	t_type			type;
 	char			*value;
 	struct s_token	*next;
+	bool			quoted_eof;
 }				t_token;
 
 typedef struct	s_fsm

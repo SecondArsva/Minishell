@@ -64,6 +64,8 @@ void	manage_quotes(t_data *data, t_token *node)
 	free(node->value);
 	node->value = safe_strdup(data->exp_str);
 	free(data->exp_str);
+	if (node->type == HEREDOC)
+		node->quoted_eof = true;
 }
 
 void	quoter(t_data *data)

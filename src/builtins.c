@@ -17,7 +17,7 @@ void	my_env(t_data *data)
  * al usar varios export separados por pipes no se exporta nada...
  * Cuando falla alguna redirección tampoco se hace el export.
 */
-
+/*
 int	var_exists(t_data *data, char *to_find)
 {
 	t_env	*tmp;
@@ -122,7 +122,7 @@ void	my_export(t_data *data, t_token *current_token)
 		tmp_token = tmp_token->next;
 	}
 }
-
+*/
 // UNSET ----------------------------------------------------------------------
 void	unset(t_data *data, char *to_find)
 {

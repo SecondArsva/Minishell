@@ -28,6 +28,8 @@ void	tok_print_list(t_token *head)
 		if (!tmp_lst->next)
 			printf("	");
 		printf("	value: %s", tmp_lst->value);
+		if (tmp_lst->type == HEREDOC)
+			printf("	quoted_eof: %i", tmp_lst->quoted_eof);
 		printf("\n");
 		tmp_lst = tmp_lst->next;
 		i++;
@@ -145,6 +147,7 @@ void	tok_new_node(t_data *data, t_type opcode)
 	new_node->type = opcode;
 	new_node->value = tok_grab_value(data, opcode);
 	new_node->next = NULL;
+	new_node->quoted_eof = false;
 	if (!data->tokens)
 		data->tokens = new_node;
 	else
