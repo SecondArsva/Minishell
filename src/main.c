@@ -90,14 +90,18 @@ int	main(int argc, char **argv, char **env)
 	tok_print_list(data->tokens);
 	printf("dat: %p\n", data->env);
 	printf("env: %p\n", env_lst);
-	/*
+	
 	printf("Builtins\n");
 	my_env(data);
-	my_unset(data, data->tokens, &env_lst);
+	my_export(data, data->tokens->next);
+	printf("\n\n[x] EXPORTED [x]\n\n");
+	/*
+	my_unset(data, data->tokens->next, &env_lst);
 	printf("\n\n[x] UNSETED [x]\n\n");
-	my_env(data);
-	printf("dat: %p", data->env);
-	printf("env: %p", env_lst);
 	*/
+	my_env(data);
+	printf("dat: %p\n", data->env);
+	printf("env: %p\n", env_lst);
+	
 	return (0);
 }

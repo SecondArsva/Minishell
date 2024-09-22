@@ -1,5 +1,27 @@
 #include "../includes/minishell.h"
 
+/*
+	TODO conversión de t_env a char **  ¿La hago yo o ya la tendrá echa Axel?
+		- recuerda "trimear" las comillas del primer tipo encontrado.
+
+	TODO export sin argumentos
+
+	TODO gestión de comillas como al exportar así como lo hago en la
+ 	creación del eviroment:
+
+	- Si la cadena "new_value" no empieza con comillas dobles, se le ponen
+	  comillas dobles en sus extremos. Principio y final.
+	- Si empieza con comillas dobles, se ponen comillas simples. Abrazando al
+	  conjunto de la cadena respetando las comillas dobles.
+
+		export	A=A		>>> A="A"
+		export	B="B"	>>> B='"B"'
+	
+	- Básicamente hay que crear y adaptar una nueva función basada
+	  en "env_quoting_value" de "init_env.c" e implementarla en "grab_value".
+*/
+
+
 void	my_env(t_data *data)
 {
 	env_print_list(data->env);
@@ -17,7 +39,7 @@ void	my_env(t_data *data)
  * al usar varios export separados por pipes no se exporta nada...
  * Cuando falla alguna redirección tampoco se hace el export.
 */
-/*
+
 int	var_exists(t_data *data, char *to_find)
 {
 	t_env	*tmp;
@@ -46,41 +68,121 @@ int	is_validenvname(char *to_eval)
 	return (1);
 }
 
+/*
 // if_exists
 // export_update_value
 // ¿tendría que hacerle la gestión de comillas?
-
-void	update_value(t_data *data, char *new_name, char *new_value)
-{
-
-}
-
-void	export_new_node(t_data *data, char *new_name, char *new_value)
+*/
+void	update_node(t_data *data, char *to_find, char *new_value)
 {
 	t_env	*tmp;
-	t_env	*new_node;
 
 	tmp = data->env;
+	while (tmp)
+	{
+		if (!ft_strncmp(to_find, tmp->var_name, strlen(tmp->var_name) + 1))
+			break ;
+		tmp = tmp->next;
+	}
+	if (tmp->var_value)
+		free(tmp->var_value);
+	tmp->var_value = new_value;
+	free(to_find);
+}
+
+void	new_node(t_data *data, char *new_name, char *new_value)
+{
+	t_env	*new_node;
+
 	new_node = safe_malloc(sizeof(t_env));
-	new_node->var_name = safe_strdup(new_name);
-	if (new_value)
-		new_node->var_value = safe_strdup(new_value);
-	else if (!new_value)
-		new_node->var_value = NULL;
-	// falta mandar el nuevo nodo al final de la lista. TODO
+	if (!new_value)
+	{
+		new_node->var_name = safe_strdup(new_name);
+		new_node->var_value = safe_strdup("\"\"");
+	}
+	else if (new_value)
+	{
+		new_node->var_name = new_name;
+		new_node->var_value = new_value;
+	}
+	new_node->next = NULL;
+	if (!data->env)
+		data->env = new_node;
+	else
+		env_update_tail(data->env, new_node);
+}
+
+char	*grab_name(char *tok_value)
+{
+	int	i;
+
+	i = 0;
+	while (tok_value[i])
+	{
+		if (tok_value[i] == '=')
+			break ;
+		i++;
+	}
+	return(safe_substr(tok_value, 0, i));
+}
+
+char	*in_quotes(char *tok_value, int start, size_t len, t_quote opcode)
+{
+	char *value;
+	char *quote;
+	char *first_join;
+	char *last_join;
+
+	value = safe_substr(tok_value, start, len);
+	if (opcode == SINGLE)
+		quote = "'";
+	else
+		quote = "\"";
+	first_join = safe_strjoin(quote, value);
+	last_join = safe_strjoin(first_join, quote);
+	free(value);
+	free(first_join);
+	return(last_join);
+}
+
+char	*quoting_value(char *tok_value, unsigned int start, size_t len)
+{
+	if (tok_value[start] == '"')
+		return (in_quotes(tok_value, start, len, SINGLE));
+	else
+		return (in_quotes(tok_value, start, len, DOUBLE));
+}
+
+char	*grab_value(char *tok_value)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (tok_value[i])
+	{
+		if (tok_value[i] == '=')
+			break ;
+		i++;
+	}
+	j = i;
+	while (tok_value[j])
+		j++;
+	return(quoting_value(tok_value, i + 1, (j - i) + 1));
 }
 
 void	with_value(t_data *data, char *tok_value)
 {
-	char *new_name;
-	char *new_value;
+	char	*new_name;
+	char	*new_value;
 
-	new_name = export_grab_name(tok_value); // TODO
-	new_value = export_grab_name(tok_value); // TODO
-	if (var_exists(new_name))
-		update_value(data, new_name, new_value);
+	new_name = grab_name(tok_value);
+	new_value = grab_value(tok_value);
+	if (var_exists(data, new_name))
+		update_node(data, new_name, new_value);
 	else
-		export_new_node(data, new_name, new_value);
+		new_node(data, new_name, new_value);
 }
 
 void	without_value(t_data *data, char *tok_value)
@@ -88,7 +190,7 @@ void	without_value(t_data *data, char *tok_value)
 	if (var_exists(data, tok_value))
 		return ;
 	else if (is_validenvname(tok_value))
-		export_new_node(data, tok_value, NULL); // TODO
+		new_node(data, tok_value, NULL);
 	else
 	{
 		printf("Minishell: export: '%s': invalid identifier\n", tok_value);
@@ -122,7 +224,7 @@ void	my_export(t_data *data, t_token *current_token)
 		tmp_token = tmp_token->next;
 	}
 }
-*/
+
 // UNSET ----------------------------------------------------------------------
 void	unset(t_data *data, char *to_find)
 {
@@ -156,6 +258,8 @@ void	my_unset(t_data *data, t_token *current_token, t_env **env_lst)
 {
 	t_token *tmp_token;
 
+	if (!current_token)
+		return ;
 	tmp_token = current_token;
 	while (tmp_token && tmp_token->type != PIPE)
 	{

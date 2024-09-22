@@ -11,6 +11,12 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 
+typedef enum	e_quote
+{
+	SINGLE,
+	DOUBLE,
+}				t_quote;
+
 typedef enum	e_type
 {
 	INFILE,
@@ -87,6 +93,7 @@ char	*safe_itoa(int n);
 
 //	### - INIT ENV - ###
 void	init_env(t_data *data, char **env);
+void	env_update_tail(t_env *head, t_env *new_tail);
 
 //	### - TOKENIZER - ###
 void	tokenizer(t_data *data);
@@ -111,7 +118,7 @@ int	get_state(int i, int j);
 
 // ### - BUILTINS - ###
 void	my_env(t_data *data);
-//void	my_export(t_data *data);
+void	my_export(t_data *data, t_token *current_token);
 void	my_unset(t_data *data, t_token *current_token, t_env **env_lst);
 
 
