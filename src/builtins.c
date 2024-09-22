@@ -1,12 +1,9 @@
 #include "../includes/minishell.h"
 
 /*
-	TODO conversión de t_env a char **  ¿La hago yo o ya la tendrá echa Axel?
-		- recuerda "trimear" las comillas del primer tipo encontrado.
+	[v] TODO export sin argumentos
 
-	TODO export sin argumentos
-
-	TODO gestión de comillas como al exportar así como lo hago en la
+	[v] TODO gestión de comillas como al exportar así como lo hago en la
  	creación del eviroment:
 
 	- Si la cadena "new_value" no empieza con comillas dobles, se le ponen
@@ -59,6 +56,8 @@ int	is_validenvname(char *to_eval)
 	int	i;
 
 	i = 0;
+	if (to_eval[0] == '\0')
+		return (0);
 	while (to_eval[i])
 	{
 		if (!is_validenvchar(to_eval[i]))
@@ -179,6 +178,11 @@ void	with_value(t_data *data, char *tok_value)
 
 	new_name = grab_name(tok_value);
 	new_value = grab_value(tok_value);
+	if (!is_validenvname(new_name))
+		{
+			printf("Minishell: export: '%s': invalid identifier\n", tok_value);
+			exit(1);
+		}
 	if (var_exists(data, new_name))
 		update_node(data, new_name, new_value);
 	else
@@ -206,10 +210,36 @@ void	without_value(t_data *data, char *tok_value)
 // Si no existe creo un nuevo nodo al final de la lista con el nombre y el valor recibidos.
 void	export(t_data *data, char *tok_value)
 {
-	if (ft_strchr(tok_value, '=')) //Tiene un igual, por lo que se tiene que actualizar el valor en caso de existir, sino se crea
-		with_value(data, tok_value); // TODO
+	if (ft_strchr(tok_value, '='))
+		with_value(data, tok_value);
 	else
 		without_value(data, tok_value);
+}
+
+int	something_to_work(t_token *list)
+{
+	t_token	*tmp;
+
+	tmp = list;
+	while (tmp)
+	{
+		if (tmp->type == COMMAND)
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+void	no_args_print(t_env *env)
+{
+	t_env	*tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		printf("declare -x %s=%s\n", tmp->var_name, tmp->var_value);
+		tmp = tmp->next;
+	}
 }
 
 void	my_export(t_data *data, t_token *current_token)
@@ -217,11 +247,16 @@ void	my_export(t_data *data, t_token *current_token)
 	t_token *tmp_token;
 
 	tmp_token = current_token;
-	while(tmp_token && tmp_token->type != PIPE)
+	if (!something_to_work(tmp_token))
+		no_args_print(data->env);
+	else
 	{
-		if (tmp_token->type == COMMAND)
-			export(data, tmp_token->value);
-		tmp_token = tmp_token->next;
+		while(tmp_token && tmp_token->type != PIPE)
+		{
+			if (tmp_token->type == COMMAND)
+				export(data, tmp_token->value);
+			tmp_token = tmp_token->next;
+		}
 	}
 }
 
