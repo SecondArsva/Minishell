@@ -1,10 +1,5 @@
 #include "../includes/minishell.h"
 
-/*
-	[x] TODO conversión de t_env a char **
-		- recuerda "trimear" las comillas del primer tipo encontrado.
-*/
-
 void	env_update_tail(t_env *head, t_env *new_tail)
 {
 	t_env	*tmp;
