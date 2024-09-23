@@ -121,5 +121,7 @@ void	my_env(t_data *data);
 void	my_export(t_data *data, t_token *current_token);
 void	my_unset(t_data *data, t_token *current_token, t_env **env_lst);
 
+// ### - ENVIROMENT LIST TO MATRIX - ###
+char **env_lst_to_mtx(t_env *env_lst);
 
 #endif

@@ -7,15 +7,16 @@ RM = rm -f
 LIBFT_DIR = libft/
 LIBFT = $(LIBFT_DIR)libft.a
 
-SRC =	src/main.c			\
-		src/safe_alloc.c	\
-		src/tokenizer.c		\
-		src/init_env.c		\
-		src/expander.c		\
-		src/expanded_len.c	\
-		src/quoter.c		\
-		src/automata.c		\
-		src/builtins.c		\
+SRC =	src/main.c				\
+		src/safe_alloc.c		\
+		src/tokenizer.c			\
+		src/init_env.c			\
+		src/expander.c			\
+		src/expanded_len.c		\
+		src/quoter.c			\
+		src/automata.c			\
+		src/builtins.c			\
+		src/env_lst_to_mtx.c	\
 
 OBJS = $(SRC:%.c=%.o)
 
