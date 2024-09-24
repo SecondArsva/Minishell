@@ -103,7 +103,9 @@ int	main(int argc, char **argv, char **env)
 	printf("env: %p\n", env_lst);
 	*/
 
+	/*
 	env_print_list(data->env);
 	ft_print_matrix(env_lst_to_mtx(data->env), "env");
+	*/
 	return (0);
 }

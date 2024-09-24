@@ -77,23 +77,25 @@ void	increase_shlvl(t_env *env)
 {
 	t_env	*tmp;
 	int		i;
-	char	*cleaned;
+	char	*aux_one;
+	char	*aux_two;
 
-	if (!env)
-		return ;
 	tmp = env;
-	i = 0;
 	while (tmp)
 	{
 		if (!ft_strncmp("SHLVL", tmp->var_name, ft_strlen("SHLVL") + 1))
 			break ;
 		tmp = tmp->next;
 	}
-	cleaned = safe_strtrim(tmp->var_value, "\"");
-	i = ft_atoi(cleaned);
+	aux_one = safe_strtrim(tmp->var_value, "\"");
 	free(tmp->var_value);
-	free(cleaned);
-	tmp->var_value = safe_itoa(i + 1);
+	i = ft_atoi(aux_one);
+	free(aux_one);
+	aux_one = safe_itoa(i + 1);
+	aux_two = safe_strjoin("\"", aux_one);
+	tmp->var_value = safe_strjoin(aux_two, "\"");
+	free(aux_one);
+	free(aux_two);
 }
 
 void	init_env(t_data *data, char **env)

@@ -21,7 +21,21 @@
 
 void	my_env(t_data *data)
 {
-	env_print_list(data->env);
+	t_env	*tmp;
+	char	*cleaned_value;
+
+	cleaned_value = NULL;
+	tmp = data->env;
+	while (tmp)
+	{
+		if (tmp->var_value[0] == '\"')
+			cleaned_value = safe_strtrim(tmp->var_value, "\"");
+		else if (tmp->var_value[0] == '\'')
+			cleaned_value = safe_strtrim(tmp->var_value, "\'");
+		printf("%s=%s\n", tmp->var_name, cleaned_value);
+		free(cleaned_value);
+		tmp = tmp->next;
+	}
 }
 
 /*
