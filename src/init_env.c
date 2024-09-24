@@ -73,6 +73,29 @@ void	env_new_node(t_data *data, char **env)
 		env_update_tail(data->env, new_node);
 }
 
+void	increase_shlvl(t_env *env)
+{
+	t_env	*tmp;
+	int		i;
+	char	*cleaned;
+
+	if (!env)
+		return ;
+	tmp = env;
+	i = 0;
+	while (tmp)
+	{
+		if (!ft_strncmp("SHLVL", tmp->var_name, ft_strlen("SHLVL") + 1))
+			break ;
+		tmp = tmp->next;
+	}
+	cleaned = safe_strtrim(tmp->var_value, "\"");
+	i = ft_atoi(cleaned);
+	free(tmp->var_value);
+	free(cleaned);
+	tmp->var_value = safe_itoa(i + 1);
+}
+
 void	init_env(t_data *data, char **env)
 {
 	data->i = 0;
@@ -86,5 +109,6 @@ void	init_env(t_data *data, char **env)
 			env_new_node(data, env);
 			data->i++;
 		}
+		increase_shlvl(data->env);
 	}
 }

@@ -1,7 +1,7 @@
 #include "../includes/minishell.h"
 
 /*
-	[x] TODO conversión de t_env a char ** para pasar el env con sus
+	[v] TODO conversión de t_env a char ** para pasar el env con sus
 			 datos actualizados a través de execve.
 
 		- Recuerda "trimear" las comillas del primer tipo encontrado.
@@ -24,9 +24,9 @@ char	**fill_matrix(t_env *env_lst, int len)
 	{
 		var_value_trimmed = env_lst->var_value;
 		if (env_lst->var_value[0] == '"')
-			var_value_trimmed = ft_strtrim(env_lst->var_value, "\"");
+			var_value_trimmed = safe_strtrim(env_lst->var_value, "\"");
 		else if (env_lst->var_value[0] == '\'')
-			var_value_trimmed = ft_strtrim(env_lst->var_value, "\'");
+			var_value_trimmed = safe_strtrim(env_lst->var_value, "\'");
 		fist_join = safe_strjoin(env_lst->var_name, "=");
 		last_join = safe_strjoin(fist_join, var_value_trimmed);
 		free(fist_join);

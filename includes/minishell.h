@@ -90,6 +90,7 @@ char	*safe_strjoin(char const *s1, char const *s2);
 char	*safe_strdup(const char *s1);
 char	*safe_substr(char const *s, unsigned int start, size_t len);
 char	*safe_itoa(int n);
+char	*safe_strtrim(char const *s1, char const *set);
 
 //	### - INIT ENV - ###
 void	init_env(t_data *data, char **env);
