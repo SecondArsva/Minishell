@@ -275,6 +275,13 @@ void	my_export(t_data *data, t_token *current_token)
 }
 
 // UNSET ----------------------------------------------------------------------
+void	free_env_content(t_env *node)
+{
+	free(node->var_name);
+	free(node->var_value);
+	free(node);
+}
+
 void	unset(t_data *data, char *to_find)
 {
 	t_env	*this;
@@ -294,7 +301,8 @@ void	unset(t_data *data, char *to_find)
 				ft_strlen(this->var_name) + 1))
 			{
 				prev->next = this->next;
-				free(this);
+				free_env_content(this);
+				break ;
 			}
 			prev = this;
 			this = this->next;
